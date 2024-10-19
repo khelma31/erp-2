@@ -55,11 +55,17 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 style="text-align: right;">Product Reference</h4>
+                                    <div class="col-12 d-flex justify-content-end mb-5">
+                                        <a type="button" class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-file-earmark bi-middle me-1"></i>
+                                            Export as PDF
+                                        </a>
+                                    </div>
+                                    <h4 style="text-align: left;">Product Reference</h4>
                                 </div>
                                 <div class="card-body">
                                     <form class="form">
-                                        <div class="row p-3">
+                                        <div class="row">
                                             <table class="table" id="table1">
                                                 <thead>
                                                     <tr>
@@ -71,9 +77,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr>
-                                                        <td>
-                                                            <b style="text-decoration: solid;">Parfume Cowo 50ml</b>
-                                                        </td>
+                                                        <td><b style="text-decoration: solid;">Parfume Cowo 50ml</b></td>
                                                         <td>1.00</td>
                                                         <td>Rp. 2000</td>
                                                         <td>Rp. 2000</td>
@@ -91,11 +95,19 @@
                                                         <td>Rp. 2000</td>
                                                     </tr>
                                                 </tbody>
+                                                <thead>
+                                                    <tr>
+                                                        <!-- Menggabungkan kolom pertama dengan colspan -->
+                                                        <th colspan="2" style="text-align: right;">Total Cost</th>
+                                                        <th>Rp. 6000</th>
+                                                        <th>Rp. 6000</th>
+                                                    </tr>
+                                                </thead>
                                             </table>
                                         </div>
-                                        <div class="col-12 d-flex justify-content-end">
+                                        <div class="col-12 d-flex justify-content-end mt-3">
                                             <a type="reset"
-                                                class="btn btn-outline-danger mb-1" href="../../dist/pages/list-bom.php">Cancel</a>
+                                                class="btn btn-danger" href="../../dist/pages/list-bom.php">Cancel</a>
                                         </div>
                                     </form>
                                 </div>
@@ -113,32 +125,40 @@
     <script src="../assets/js/main.js"></script>
 
     <style>
-        /* Styling kolom dan rata teks */
-        #table1 th,
-        #table1 td {
-            text-align: left;
+        /* Menghilangkan border tabel */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            /* Tidak menggabungkan border */
+            border: none;
+            /* Menghilangkan border keseluruhan */
         }
 
-        #table1 th:nth-child(1),
-        #table1 td:nth-child(1) {
+        /* Mengatur th dan td tanpa border */
+        th,
+        td {
+            border: none;
+            padding: 8px;
+        }
+
+        /* Mengatur lebar kolom */
+        th:nth-child(1),
+        td:nth-child(1) {
             width: 40%;
             /* Kolom Product lebih lebar */
         }
 
-        #table1 th:nth-child(2),
-        #table1 td:nth-child(2),
-        #table1 th:nth-child(3),
-        #table1 td:nth-child(3),
-        #table1 th:nth-child(4),
-        #table1 td:nth-child(4) {
+        th:nth-child(n+2),
+        td:nth-child(n+2) {
             text-align: right;
             /* Kolom selain Product rata kanan */
             width: 20%;
         }
 
-        /* Menambahkan indentasi untuk baris tertentu */
+        /* Indentasi untuk baris tertentu */
         .indent td:first-child {
             padding-left: 50px;
+            /* Indentasi lebih dalam */
         }
     </style>
 
