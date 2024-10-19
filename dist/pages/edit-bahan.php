@@ -58,6 +58,16 @@
                                     <div class="card-body">
                                         <form class="form">
                                             <div class="row p-3">
+                                                <div class="col-12 d-flex justify-content-end mb-3">
+                                                    <a type="button" class="btn btn-outline-secondary btn-sm me-2">
+                                                        <i class="bi bi-upc-scan bi-middle me-1"></i>
+                                                        Barcode
+                                                    </a>
+                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
+                                                        Export as PDF
+                                                    </a>
+                                                </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="city-column" class="mb-2">Name</label>
@@ -123,9 +133,9 @@
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-end mt-3">
                                                     <button type="submit"
-                                                        class="btn btn-primary me-1 mb-1">Save</button>
+                                                        class="btn btn-primary me-2 mb-1">Save</button>
                                                     <a type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-bahan.php">Cancel</a>
+                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-bahan.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
