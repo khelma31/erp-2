@@ -123,9 +123,9 @@
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-end mt-3">
                                                     <button type="submit"
-                                                        class="btn btn-primary me-1 mb-1">Save</button>
+                                                        class="btn btn-primary me-2 mb-1">Save</button>
                                                     <a type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-bahan.php">Cancel</a>
+                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-bahan.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
