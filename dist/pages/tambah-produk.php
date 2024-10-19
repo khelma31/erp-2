@@ -80,47 +80,41 @@
                                                 </div>
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Product Variant</label>
-                                                        <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
-                                                                <option value="" disabled selected>- Choose Variant -</option>
-                                                                <option>Parfume Cowo 50ml</option>
-                                                                <option>Parfume Cowo 100ml</option>
-                                                            </select>
-                                                        </fieldset>
+                                                        <div class="col d-flex justify-content-start mb-3">
+                                                            <label for="">Is this product a variant?</label>
+                                                        </div>
+                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                                        <label class="form-check-label me-2" for="flexRadioDefault1">
+                                                            Yes
+                                                        </label>
+                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
+                                                        <label class="form-check-label" for="flexRadioDefault1">
+                                                            No
+                                                        </label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="country-floating" class="mb-2">Sales Price</label>
-                                                        <div class="input-group mb-3">
-                                                            <input type="number" class="form-control"
-                                                                aria-label="Text input with dropdown button"
-                                                                placeholder="Rp.">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false">Tax</button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="#">11%</a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 col-12 mb-3">
-                                                    <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Cost</label>
-                                                        <input type="text" id="country-floating" class="form-control"
+                                                        <input type="number" id="country-floating" class="form-control"
                                                             name="country-floating" placeholder="Rp.">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Barcode</label>
-                                                        <input type="text" id="company-column" class="form-control"
-                                                            name="company-column">
+                                                        <label for="country-floating" class="mb-2">Cost</label>
+                                                        <input type="number" id="country-floating" class="form-control"
+                                                            name="country-floating" placeholder="Rp.">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-6 mb-3">
+                                                <div class="col-md-6 col-12 mb-3">
+                                                    <div class="form-group">
+                                                        <label for="country-floating" class="mb-2">Tax</label>
+                                                        <input type="number" id="country-floating" class="form-control"
+                                                            name="country-floating" placeholder="11%" disabled>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="email-id-column" class="mb-2">Add Image</label>
                                                         <input type="file" class="form-control" id="inputGroupFile01">
@@ -136,9 +130,9 @@
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-end mt-3">
                                                     <button type="submit"
-                                                        class="btn btn-primary me-1 mb-1">Save</button>
+                                                        class="btn btn-primary me-2 mb-1">Save</button>
                                                     <a type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
+                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
