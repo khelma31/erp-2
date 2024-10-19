@@ -119,7 +119,7 @@
                                                 <div class="table-responsive">
                                                     <div class="row">
                                                         <div class="col-md-12 col-12 d-flex justify-content-end">
-                                                            <button type="button" class="btn btn-outline-primary btn-sm me-2" id="addMaterialButton">
+                                                            <button type="button" class="btn btn-outline-primary btn-sm" id="addMaterialButton">
                                                                 <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
                                                         </div>
                                                     </div>
@@ -129,7 +129,7 @@
                                                                 <th>Material</th>
                                                                 <th>Quantity</th>
                                                                 <th>Unit</th>
-                                                                <th>Action</th> <!-- Tambahkan kolom Action -->
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="materialTabelBody">
@@ -147,7 +147,10 @@
                                                                     <input type="number" name="quantity[]" class="form-control" placeholder="Quantity" required>
                                                                 </td>
                                                                 <td>
-                                                                    <input type="text" name="unit[]" class="form-control" placeholder="Unit" required>
+                                                                    <select class="form-select" name="unit[]" required>
+                                                                        <option value="" disabled selected>- Select Unit -</option>
+                                                                        <option value="Steel">Steel</option>
+                                                                    </select>
                                                                 </td>
                                                                 <td>
                                                                     <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
@@ -186,9 +189,9 @@
 
                                                 <div class="col-12 d-flex justify-content-end mt-5">
                                                     <button type="submit"
-                                                        class="btn btn-primary me-1 mb-1">Save</button>
+                                                        class="btn btn-primary me-2 mb-1">Save</button>
                                                     <a type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-bom.php">Cancel</a>
+                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-bom.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -236,7 +239,11 @@
             cell2.innerHTML = `<input type="number" name="quantity[]" class="form-control" placeholder="Quantity" required>`;
 
             // Input Unit
-            cell3.innerHTML = `<input type="text" name="unit[]" class="form-control" placeholder="Unit" required>`;
+            cell3.innerHTML = `
+            <select class="form-select" name="unit[]" required>
+                <option value="" disabled selected>- Select Unit -</option>
+                <option value="Steel">Steel</option>
+            </select>`;
 
             // Tombol Delete
             cell4.innerHTML = `
