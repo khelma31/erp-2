@@ -36,6 +36,9 @@
                                 <li class="submenu-item ">
                                     <a href="../../dist/pages/list-bom.php">Bill of Material</a>
                                 </li>
+                                <li class="submenu-item ">
+                                    <a href="../../dist/pages/list-mo.php">Manufacturing Order</a>
+                                </li>
                             </ul>
                         </li>
                     </ul>

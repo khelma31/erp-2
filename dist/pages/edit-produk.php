@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Material</title>
+    <title>Edit Product</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -23,9 +23,11 @@
 
 <body>
     <div id="app">
+
         <!-- Sidebar -->
         <?php include '../../dist/layouts/_sidebar.php'; ?>
         <!-- Sidebar -->
+
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -37,14 +39,14 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>Add Material</h3>
+                            <h3>Edit Product</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="../../dist/pages/index.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="../../dist/pages/list-bahan.php">List Material</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Add Material</li>
+                                    <li class="breadcrumb-item"><a href="../../dist/pages/list-produk.php">List Product</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Edit Product</li>
                                 </ol>
                             </nav>
                         </div>
@@ -65,26 +67,43 @@
                                                             name="fname-column">
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-12 mb-3">
+                                                <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Material Category</label>
+                                                        <label for="last-name-column" class="mb-2">Product Category</label>
                                                         <fieldset class="form-group">
                                                             <select class="form-select" id="basicSelect">
                                                                 <option value="" disabled selected>- Choose Category -</option>
                                                                 <option>Minyak Esensial</option>
-                                                                <option>Pelarut</option>
-                                                                <option>Aditif Aroma</option>
-                                                                <option>Kemasan</option>
-                                                                <option>Label dan Aksesori</option>
+                                                            </select>
+                                                        </fieldset>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 col-12 mb-3">
+                                                    <div class="form-group">
+                                                        <label for="last-name-column" class="mb-2">Product Variant</label>
+                                                        <fieldset class="form-group">
+                                                            <select class="form-select" id="basicSelect">
+                                                                <option value="" disabled selected>- Choose Variant -</option>
+                                                                <option>Parfume Cowo 50ml</option>
+                                                                <option>Parfume Cowo 100ml</option>
                                                             </select>
                                                         </fieldset>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Sales Price</label>
-                                                        <input type="text" id="city-column" class="form-control"
-                                                            name="city-column" placeholder="Rp.">
+                                                        <label for="country-floating" class="mb-2">Sales Price</label>
+                                                        <div class="input-group mb-3">
+                                                            <input type="number" class="form-control"
+                                                                aria-label="Text input with dropdown button"
+                                                                placeholder="Rp.">
+                                                            <button class="btn btn-primary dropdown-toggle" type="button"
+                                                                data-bs-toggle="dropdown"
+                                                                aria-expanded="false">Tax</button>
+                                                            <ul class="dropdown-menu">
+                                                                <li><a class="dropdown-item" href="#">11%</a></li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
@@ -96,15 +115,9 @@
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Unit</label>
-                                                        <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
-                                                                <option value="" disabled selected>- Choose Unit -</option>
-                                                                <option>g</option>
-                                                                <option>L</option>
-                                                                <option>pcs</option>
-                                                            </select>
-                                                        </fieldset>
+                                                        <label for="company-column" class="mb-2">Barcode</label>
+                                                        <input type="text" id="company-column" class="form-control"
+                                                            name="company-column">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-6 mb-3">
@@ -125,7 +138,7 @@
                                                     <button type="submit"
                                                         class="btn btn-primary me-1 mb-1">Save</button>
                                                     <a type="reset"
-                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-bahan.php">Cancel</a>
+                                                        class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>

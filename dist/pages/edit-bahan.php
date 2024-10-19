@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Material</title>
+    <title>Edit Material</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -37,14 +37,14 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>Add Material</h3>
+                            <h3>Edit Material</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="../../dist/pages/index.php">Dashboard</a></li>
                                     <li class="breadcrumb-item"><a href="../../dist/pages/list-bahan.php">List Material</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Add Material</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Edit Material</li>
                                 </ol>
                             </nav>
                         </div>

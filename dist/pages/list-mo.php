@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List Material</title>
+    <title>List Manufacturing Order</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -34,13 +34,13 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>List Material</h3>
+                            <h3>List Manufacturing Order</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="../../dist/pages/index.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">List Material</li>
+                                    <li class="breadcrumb-item active" aria-current="page">List Manufacturing Order</li>
                                 </ol>
                             </nav>
                         </div>
@@ -51,13 +51,9 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col d-flex justify-content-end">
-                                    <a type="button" class="btn btn-outline-primary btn-sm me-2" href='tambah-bahan.php'>
-                                        <i class="bi bi-plus-square bi-middle me-1"></i>
+                                    <a type="button" class="btn btn-outline-primary btn-sm" href='tambah-mo.php'>
+                                        <i class="bi bi-plus-square bi-middle me-2"></i>
                                         Add
-                                    </a>
-                                    <a type="button" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
-                                        Export as PDF
                                     </a>
                                 </div>
                             </div>
@@ -66,10 +62,10 @@
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>City</th>
+                                        <th>Reference</th>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>State</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -80,7 +76,10 @@
                                         <td>076 4820 8838</td>
                                         <td>Offenburg</td>
                                         <td>
-                                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-bahan.php'>
+                                            <a type="button" class="btn btn-outline-secondary btn-sm me-1" href='#'>
+                                                <i class="bi bi-file-earmark-easel bi-middle"></i>
+                                            </a>
+                                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='#'>
                                                 <i class="bi bi-pencil-square bi-middle"></i>
                                             </a>
                                             <a type="button" class="btn btn-outline-danger btn-sm">
