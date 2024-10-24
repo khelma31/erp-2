@@ -58,91 +58,99 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form id="editProductForm" class="form">
                                             <div class="row p-3">
                                                 <div class="col-12 d-flex justify-content-end mb-4">
-                                                    <a type="button" class="btn btn-outline-dark btn-sm me-2">
+                                                    <a type="button" class="btn btn-outline-dark btn-sm me-2" id="printButtonBarcode">
                                                         <i class="bi bi-upc-scan bi-middle me-1"></i>
                                                         Barcode
                                                     </a>
-                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                                    <a type="button" class="btn btn-outline-secondary btn-sm" id="printButtonPdf">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
                                                     </a>
                                                 </div>
+                                                <!-- Name Field -->
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Name</label>
-                                                        <input type="text" id="first-name-column" class="form-control"
-                                                            name="fname-column">
+                                                        <label for="name" class="mb-2">Name</label>
+                                                        <input type="text" id="name" class="form-control" name="name">
                                                     </div>
                                                 </div>
+
+                                                <!-- Product Category -->
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Product Category</label>
-                                                        <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
-                                                                <option value="" disabled selected>- Choose Category -</option>
-                                                                <option>Minyak Esensial</option>
-                                                            </select>
-                                                        </fieldset>
+                                                        <label for="category" class="mb-2">Product Category</label>
+                                                        <select class="form-select" id="category">
+                                                            <option value="" disabled selected>- Choose Category -</option>
+                                                            <option>Minyak Esensial</option>
+                                                            <!-- Add more categories as needed -->
+                                                        </select>
                                                     </div>
                                                 </div>
+
+                                                <!-- Variant -->
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <div class="col d-flex justify-content-start mb-3">
-                                                            <label for="">Is this product a variant?</label>
+                                                        <label class="mb-2">Is this product a variant?</label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
+                                                            <label class="form-check-label" for="variantYes">Yes</label>
                                                         </div>
-                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                                        <label class="form-check-label me-2" for="flexRadioDefault1">
-                                                            Yes
-                                                        </label>
-                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                                                        <label class="form-check-label" for="flexRadioDefault1">
-                                                            No
-                                                        </label>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
+                                                            <label class="form-check-label" for="variantNo">No</label>
+                                                        </div>
                                                     </div>
                                                 </div>
+
+                                                <!-- Sales Price -->
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Sales Price</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="Rp.">
+                                                        <label for="sellPrice" class="mb-2">Sales Price</label>
+                                                        otal Price (Incl. Taxes): <span id="finalSellPriceDisplay">Rp 0,00</span>
+                                                        <input type="number" id="sellPrice" class="form-control" name="sellPrice" placeholder="Rp.">
                                                     </div>
                                                 </div>
+
+                                                <!-- Cost -->
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Cost</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="Rp.">
+
+                                                        <label for="cost" class="mb-2">Cost</label>
+                                                        <input type="number" id="cost" class="form-control" name="cost" placeholder="Rp.">
                                                     </div>
                                                 </div>
+
+                                                <!-- Tax -->
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Tax</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="11%" disabled>
+                                                        <label for="tax" class="mb-2">Tax</label>
+                                                        <input type="number" id="tax" class="form-control" name="tax" placeholder="11%" disabled>
                                                     </div>
                                                 </div>
+
+                                                <!-- Image -->
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="email-id-column" class="mb-2">Add Image</label>
-                                                        <input type="file" class="form-control" id="inputGroupFile01">
-                                                        <!-- <input type="file" class="image-crop-filepond" image-crop-aspect-ratio="1:1"> -->
+                                                        <label for="image" class="mb-2"> Image</label>
+                                                        <img id="imagePreview" style="display:none; width: 300px; " alt="Product Image">
                                                     </div>
                                                 </div>
+
+                                                <!-- Description -->
                                                 <div class="col-md-12 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Description</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1"
-                                                            rows="3"></textarea>
+                                                        <label for="description" class="mb-2">Description</label>
+                                                        <textarea class="form-control" id="description" rows="3"></textarea>
                                                     </div>
                                                 </div>
+
+                                                <!-- Submit and Cancel -->
                                                 <div class="col-12 d-flex justify-content-end mt-3">
-                                                    <button type="submit"
-                                                        class="btn btn-primary me-2 mb-1">Save</button>
-                                                    <a type="reset"
-                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
+                                                    <button type="submit" class="btn btn-primary me-2 mb-1">Save</button>
+                                                    <a href="../../dist/pages/list-produk.php" class="btn btn-light-secondary mb-1">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -158,6 +166,132 @@
     </div>
     <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+
+    <script>
+        let productId; // Declare productId in a broader scope
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            productId = urlParams.get('id'); // Assign the product ID from URL
+
+            document.getElementById('sellPrice').addEventListener('input', calculateFinalSellPrice);
+            document.getElementById('tax').addEventListener('input', calculateFinalSellPrice);
+
+            function calculateFinalSellPrice() {
+                const sellPrice = parseFloat(document.getElementById('sellPrice').value) || 0;
+                const taxRate = parseFloat(document.getElementById('tax').value) / 100 || 0;
+
+                const finalSellPrice = sellPrice * (1 + taxRate);
+                document.getElementById('finalSellPriceDisplay').textContent = `Rp ${finalSellPrice.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')}`;
+            }
+
+            if (productId) {
+                // Fetch product details
+                axios.get(`http://localhost:3000/app/api/v1/product/${productId}`)
+                    .then(response => {
+                        const product = response.data.data;
+
+                        // Populate form fields with product data
+                        document.getElementById('name').value = product.Productname || '';
+                        document.getElementById('category').value = product.Productcategory || '';
+                        document.getElementById('sellPrice').value = product.Sellprice || '';
+                        document.getElementById('cost').value = product.Makeprice || '';
+                        document.getElementById('description').value = product.Description || '';
+
+                        // Handle variant radio buttons
+                        if (product.Variant === 'yes') {
+                            document.getElementById('variantYes').checked = true;
+                        } else {
+                            document.getElementById('variantNo').checked = true;
+                        }
+
+                        // Display image if available
+                        if (product.Image) {
+                            const imagePreview = document.getElementById('imagePreview');
+                            imagePreview.src = `http://localhost:3000${product.Image}`;
+                            imagePreview.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('There was an error fetching the product!', error);
+                    });
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('editProductForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            axios.put(`http://localhost:3000/app/api/v1/product/${productId}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    alert('Product updated successfully!');
+                    window.location.href = '../../dist/pages/list-produk.php';
+                })
+                .catch(error => {
+                    console.error('There was an error updating the product!', error);
+                });
+        });
+
+        document.getElementById('printButtonBarcode').addEventListener('click', function() {
+            if (!productId) {
+                alert('Product ID is not defined.');
+                return;
+            }
+
+            axios({
+                    url: `http://localhost:3000/app/api/v1/product/${productId}/barcode`,
+                    method: 'GET',
+                    responseType: 'blob'
+                })
+                .then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `barcode_${productId}.png`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                })
+                .catch((error) => {
+                    console.error('There was an error downloading the PDF!', error);
+                    alert('Error downloading PDF.');
+                });
+        });
+
+        document.getElementById('printButtonPdf').addEventListener('click', function() {
+            if (!productId) {
+                alert('Product ID is not defined.');
+                return;
+            }
+
+            axios({
+                    url: `http://localhost:3000/app/api/v1/product/${productId}/pdf`,
+                    method: 'GET',
+                    responseType: 'blob'
+                })
+                .then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `data${productId}.pdf`);
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                })
+                .catch((error) => {
+                    console.error('There was an error downloading the PDF!', error);
+                    alert('Error downloading PDF.');
+                });
+        });
+    </script>
 
     <script src="../assets/js/main.js"></script>
 </body>

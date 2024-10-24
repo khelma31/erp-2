@@ -58,7 +58,7 @@
                                         <i class="bi bi-plus-square bi-middle me-1"></i>
                                         Add
                                     </a>
-                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                    <a type="button" class="btn btn-outline-secondary btn-sm" id="printButton">
                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                         Export as PDF
                                     </a>
@@ -66,12 +66,12 @@
                             </div>
                             <div class="row">
                                 <div class="col d-flex justify-content-start">
-                                    <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                                    <input class="form-check-input me-1" type="radio" name="showVariants" id="flexRadioDefault1" value="yes">
                                     <label class="form-check-label me-2" for="flexRadioDefault1">
                                         Yes
                                     </label>
-                                    <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                                    <label class="form-check-label" for="flexRadioDefault1">
+                                    <input class="form-check-input me-1" type="radio" name="showVariants" id="flexRadioDefault2" value="no" checked>
+                                    <label class="form-check-label" for="flexRadioDefault2">
                                         No
                                     </label>
                                 </div>
@@ -81,28 +81,15 @@
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Phone</th>
-                                        <th>City</th>
+                                        <th>Product ID</th>
+                                        <th>Product Name</th>
+                                        <th>Product Category</th>
+                                        <th>Image</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Graiden</td>
-                                        <td>vehicula.aliquet@semconsequat.co.uk</td>
-                                        <td>076 4820 8838</td>
-                                        <td>Offenburg</td>
-                                        <td>
-                                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-produk.php'>
-                                                <i class="bi bi-pencil-square bi-middle"></i>
-                                            </a>
-                                            <a type="button" class="btn btn-outline-danger btn-sm">
-                                                <i class="bi bi-trash-fill bi-middle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <tbody id="productTableBody">
+                                    <!-- Product rows will be injected here -->
                                 </tbody>
                             </table>
                         </div>
@@ -115,10 +102,94 @@
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="../assets/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Simple Datatable
-        let table1 = document.querySelector('#table1');
-        let dataTable = new simpleDatatables.DataTable(table1);
+        // Function to fetch data based on selected radio button
+        function fetchProducts() {
+            const showVariants = document.querySelector('input[name="showVariants"]:checked').value;
+            const apiUrl = showVariants === "yes" ? 
+                'http://localhost:3000/app/api/v1/product/variants/all?page=1' :
+                'http://localhost:3000/app/api/v1/product/all?page=1';
+
+            axios.get(apiUrl)
+                .then(response => {
+                    const products = response.data.data; // Assuming response.data.data contains product array
+                    const tableBody = document.getElementById('productTableBody');
+                    const imageBaseUrl = 'http://localhost:3000'; // Base URL of your server
+                    tableBody.innerHTML = ''; // Clear previous rows
+
+                    products.forEach(product => {
+                        const imageUrl = `${imageBaseUrl}${product.Image}`;
+                        const row = `
+                            <tr>
+                                <td>${product.id_product}</td>
+                                <td>${product.Productname}</td>
+                                <td>${product.Productcategory}</td>
+                                <td><img src="${imageUrl}" alt="${product.Productname}" style="width: 100px; height: auto;"></td>
+                                <td>
+                                    <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-produk.php?id=${product.id_product}'>
+                                        <i class="bi bi-pencil-square bi-middle"></i>
+                                    </a>
+                                    <a type="button" class="btn btn-outline-danger btn-sm" onclick="deleteProduct('${product.id_product}')">
+                                        <i class="bi bi-trash-fill bi-middle"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
+
+                    // Initialize the DataTable after the table has been populated
+                    new simpleDatatables.DataTable(table1);
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the products!', error);
+                });
+        }
+
+        // Function to delete a product
+        function deleteProduct(productId) {
+            if (confirm('Are you sure you want to delete this product?')) {
+                axios.delete(`http://localhost:3000/app/api/v1/products/${productId}`)
+                    .then(response => {
+                        alert('Product deleted successfully!');
+                        fetchProducts(); // Refresh the product list
+                    })
+                    .catch(error => {
+                        console.error('There was an error deleting the product!', error);
+                        alert('Failed to delete the product.');
+                    });
+            }
+        }
+
+        // Event listener for radio button changes
+        document.querySelectorAll('input[name="showVariants"]').forEach((elem) => {
+            elem.addEventListener("change", fetchProducts);
+        });
+
+        // Initial fetch
+        fetchProducts();
+
+        document.getElementById('printButton').addEventListener('click', function() {
+            axios({
+                    url: 'http://localhost:3000/app/api/v1/product/pdf',
+                    method: 'GET',
+                    responseType: 'blob' // Important
+                })
+                .then((response) => {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'products.pdf'); // or any other name
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                })
+                .catch((error) => {
+                    console.error('There was an error downloading the PDF!', error);
+                    alert('Error downloading PDF.');
+                });
+        });
     </script>
 
     <script src="../assets/js/main.js"></script>

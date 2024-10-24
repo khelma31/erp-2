@@ -9,12 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-
     <link rel="stylesheet" href="../assets/vendors/toastify/toastify.css">
     <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet">
-
+    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/app.css">
@@ -56,20 +53,19 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form id="materialForm" class="form">
                                             <div class="row p-3">
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Name</label>
-                                                        <input type="text" id="first-name-column" class="form-control"
-                                                            name="fname-column">
+                                                        <label for="name" class="mb-2">Name</label>
+                                                        <input type="text" id="name" class="form-control" name="materialname" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Material Category</label>
+                                                        <label for="category" class="mb-2">Material Category</label>
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="category" name="materialcategory" required>
                                                                 <option value="" disabled selected>- Choose Category -</option>
                                                                 <option>Minyak Esensial</option>
                                                                 <option>Pelarut</option>
@@ -82,23 +78,21 @@
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Sales Price</label>
-                                                        <input type="text" id="city-column" class="form-control"
-                                                            name="city-column" placeholder="Rp.">
+                                                        <label for="sellprice" class="mb-2">Sales Price</label>
+                                                        <input type="text" id="sellprice" class="form-control" name="sellprice" placeholder="Rp." required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Cost</label>
-                                                        <input type="text" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="Rp.">
+                                                        <label for="cost" class="mb-2">Cost</label>
+                                                        <input type="text" id="cost" class="form-control" name="makeprice" placeholder="Rp." required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Unit</label>
+                                                        <label for="unit" class="mb-2">Unit</label>
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="unit" name="unit" required>
                                                                 <option value="" disabled selected>- Choose Unit -</option>
                                                                 <option>g</option>
                                                                 <option>L</option>
@@ -109,16 +103,14 @@
                                                 </div>
                                                 <div class="col-md-6 col-6 mb-3">
                                                     <div class="form-group">
-                                                        <label for="email-id-column" class="mb-2">Add Image</label>
-                                                        <input type="file" class="form-control" id="inputGroupFile01">
-                                                        <!-- <input type="file" class="image-crop-filepond" image-crop-aspect-ratio="1:1"> -->
+                                                        <label for="inputGroupFile01" class="mb-2">Add Image</label>
+                                                        <input type="file" class="form-control" id="inputGroupFile01" name="image" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Description</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1"
-                                                            rows="3"></textarea>
+                                                        <label for="description" class="mb-2">Description</label>
+                                                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-end mt-3">
@@ -136,11 +128,36 @@
                     </div>
                 </section>
             </div>
-
         </div>
     </div>
+
     <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    
+    <script>
+        document.getElementById('materialForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this); // Collect all form data
+
+            axios.post('http://localhost:3000/app/api/v1/materials', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            .then(response => {
+                console.log('Success:', response.data);
+                alert(response.data.meta.message); // Show success message
+                // Optionally redirect to the list page or reset the form
+                window.location.href = '../../dist/pages/list-bahan.php';
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                alert('There was an error adding the material.');
+            });
+        });
+    </script>
 
     <script src="../assets/js/main.js"></script>
 </body>

@@ -9,12 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/bootstrap.css">
-
     <link rel="stylesheet" href="../assets/vendors/toastify/toastify.css">
-    <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
-    <link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css"
-        rel="stylesheet">
-
     <link rel="stylesheet" href="../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/app.css">
@@ -23,7 +18,6 @@
 
 <body>
     <div id="app">
-
         <!-- Sidebar -->
         <?php include '../../dist/layouts/_sidebar.php'; ?>
         <!-- Sidebar -->
@@ -46,7 +40,7 @@
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="../../dist/pages/index.php">Dashboard</a></li>
                                     <li class="breadcrumb-item"><a href="../../dist/pages/list-bom.php">List Bill of Material</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Add Bill of Material</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Edit Bill of Material</li>
                                 </ol>
                             </nav>
                         </div>
@@ -58,56 +52,44 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form class="form" id="bomForm">
                                             <div class="row p-3">
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Product</label>
+                                                        <label for="basicSelect" class="mb-2">Product</label>
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="basicSelect" name="product" required>
                                                                 <option value="" disabled selected>- Choose Product -</option>
-                                                                <option>Minyak Esensial</option>
+                                                                <!-- Example product -->
+                                                                <option value="PRF-00001">Minyak Esensial</option>
                                                             </select>
                                                         </fieldset>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Product Reference</label>
-                                                        <input type="text" id="first-name-column" class="form-control"
-                                                            name="fname-column">
+                                                        <label for="productReference" class="mb-2">Product Reference</label>
+                                                        <input type="text" id="productReference" class="form-control" name="productReference" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Product Variant</label>
+                                                        <label for="productVariant" class="mb-2">Product Variant</label>
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="productVariant" name="productVariant" required>
                                                                 <option value="" disabled selected>- Choose Variant -</option>
-                                                                <option>Minyak Esensial</option>
+                                                                <option value="Cairan">Cairan</option> <!-- Example variant -->
                                                             </select>
                                                         </fieldset>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Quantity</label>
-                                                        <div class="input-group mb-3">
-                                                            <input type="number" class="form-control"
-                                                                aria-label="Text input with dropdown button">
-                                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false">Unit</button>
-                                                            <ul class="dropdown-menu">
-                                                                <li><a class="dropdown-item" href="#">g</a></li>
-                                                                <li><a class="dropdown-item" href="#">ml</a></li>
-                                                            </ul>
-                                                        </div>
+                                                        <label for="quantity" class="mb-2">Quantity</label>
+                                                        <input type="number" id="quantity" class="form-control" name="quantity" required>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
-                                        <form class="form">
                                             <div class="row p-3">
                                                 <div class="page-title">
                                                     <div class="row">
@@ -119,7 +101,7 @@
                                                 <div class="table-responsive">
                                                     <div class="row">
                                                         <div class="col-md-12 col-12 d-flex justify-content-end">
-                                                            <button type="button" class="btn btn-outline-primary btn-sm" id="addMaterialButton">
+                                                            <button type="button" class="btn btn-outline-primary btn-sm me-2" id="addMaterialButton">
                                                                 <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
                                                         </div>
                                                     </div>
@@ -133,65 +115,14 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody id="materialTabelBody">
-                                                            <tr>
-                                                                <td>
-                                                                    <select class="form-select" name="material[]" required>
-                                                                        <option value="" disabled selected>- Select Material -</option>
-                                                                        <option value="Steel">Steel</option>
-                                                                        <option value="Aluminum">Aluminum</option>
-                                                                        <option value="Plastic">Plastic</option>
-                                                                        <option value="Copper">Copper</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" name="quantity[]" class="form-control" placeholder="Quantity" required>
-                                                                </td>
-                                                                <td>
-                                                                    <select class="form-select" name="unit[]" required>
-                                                                        <option value="" disabled selected>- Select Unit -</option>
-                                                                        <option value="Steel">Steel</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                                                                        <i class="bi bi-trash bi-middle"></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr>
+                                                            <!-- Existing materials will be populated here -->
                                                         </tbody>
                                                     </table>
-
-                                                    <div id="materialForm" style="display: none;">
-                                                        <div class="row">
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label for="materialName">Material Name</label>
-                                                                    <input type="text" class="form-control" id="materialName">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label for="materialQuantity">Quantity</label>
-                                                                    <input type="text" class="form-control" id="materialQuantity">
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-sm-4">
-                                                                <div class="form-group">
-                                                                    <label for="materialUnit">Unit</label>
-                                                                    <input type="text" class="form-control" id="materialUnit">
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <button type="button" class="btn btn-primary" id="submitBahanButton">Tambahkan Bahan</button>
-                                                    </div>
-
                                                 </div>
 
                                                 <div class="col-12 d-flex justify-content-end mt-5">
-                                                    <button type="submit"
-                                                        class="btn btn-primary me-2 mb-1">Save</button>
-                                                    <a type="reset"
-                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-bom.php">Cancel</a>
+                                                    <button type="submit" class="btn btn-primary me-1 mb-1">Save</button>
+                                                    <a type="reset" class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-bom.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
@@ -205,68 +136,190 @@
 
         </div>
     </div>
+
     <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
-
     <script src="../assets/js/main.js"></script>
 
     <!-- Import jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        // Fungsi untuk menambah baris material baru
-        document.getElementById('addMaterialButton').addEventListener('click', function() {
-            var tableBody = document.getElementById('materialTabelBody');
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const bomId = urlParams.get('id'); // Get material ID from URL
+            fetchBomData(bomId);
 
-            var newRow = document.createElement('tr');
+            function fetchBomData(bomId) {
+                $.ajax({
+                    url: `http://localhost:3000/app/api/v1/bom/${bomId}`, // Replace with your API endpoint
+                    method: 'GET',
+                    success: function(response) {
+                        // Check if the response is successful
+                        if (response.meta.code === 200) {
+                            const data = response.data_bom;
 
-            var cell1 = document.createElement('td');
-            var cell2 = document.createElement('td');
-            var cell3 = document.createElement('td');
-            var cell4 = document.createElement('td'); // Kolom Action
+                            // Populate Product Dropdown
+                            $('#basicSelect').empty(); // Clear existing options
+                            $('#basicSelect').append(`<option value="" disabled>- Choose Product -</option>`);
+                            $('#basicSelect').append(`<option value="${data.id_product}" selected>${data.id_product} | ${data.productname}</option>`);
 
-            // Dropdown Material
-            cell1.innerHTML = `
-            <select class="form-select" name="material[]" required>
-                <option value="" disabled selected>- Select Material -</option>
-                <option value="Steel">Steel</option>
-                <option value="Aluminum">Aluminum</option>
-                <option value="Plastic">Plastic</option>
-                <option value="Copper">Copper</option>
-            </select>`;
+                            // Populate Product Reference
+                            $('#productReference').val(data.productpreference); // Set Product Reference
 
-            // Input Quantity
-            cell2.innerHTML = `<input type="number" name="quantity[]" class="form-control" placeholder="Quantity" required>`;
+                            // Populate Product Variant Dropdown
+                            $('#productVariant').empty(); // Clear existing options
+                            $('#productVariant').append(`<option value="" disabled>- Choose Variant -</option>`);
+                            $('#productVariant').append(`<option value="${data.productname}" selected>${data.productname}</option>`);
 
-            // Input Unit
-            cell3.innerHTML = `
-            <select class="form-select" name="unit[]" required>
-                <option value="" disabled selected>- Select Unit -</option>
-                <option value="Steel">Steel</option>
-            </select>`;
+                            // Set Quantity
+                            $('#quantity').val(data.quantity); // Set Quantity
 
-            // Tombol Delete
-            cell4.innerHTML = `
-            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                <i class="bi bi-trash bi-middle"></i>
-            </button>`;
+                            // Populate materials
+                            const materials = data.materials;
+                            $('#materialTabelBody').empty(); // Clear existing materials
+                            materials.forEach(material => {
+                                $('#materialTabelBody').append(`
+                            <tr>
+                                <td>
+                                    <select class="form-select" name="material[]" required>
+                                        <option value="${material.id_material}" selected>${material.id_material} | ${material.material_name}</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input type="number" name="quantity[]" class="form-control" value="${material.quantity}" required>
+                                </td>
+                                <td>
+                                    <input type="text" name="unit[]" class="form-control" value="${material.unit}" required>
+                                </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                                        <i class="bi bi-trash bi-middle"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
+                            });
 
-            newRow.appendChild(cell1);
-            newRow.appendChild(cell2);
-            newRow.appendChild(cell3);
-            newRow.appendChild(cell4);
+                            // Call the function to populate material select for existing materials
+                            materials.forEach((material, index) => {
+                                populateMaterialSelect($('#materialTabelBody tr').eq(index).find('select[name="material[]"]'));
+                            });
 
-            tableBody.appendChild(newRow);
-        });
-
-        // Event listener untuk tombol delete
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.closest('.deleteMaterialButton')) {
-                e.target.closest('tr').remove();
+                        } else {
+                            console.error("Error:", response.meta.message);
+                        }
+                    },
+                    error: function(error) {
+                        console.log("Error fetching BOM data:", error);
+                    }
+                });
             }
+
+            // Function to fetch materials and populate the select element
+            function fetchMaterials() {
+                return $.ajax({
+                    url: 'http://localhost:3000/app/api/v1/material/all',
+                    type: 'GET'
+                });
+            }
+
+            function populateMaterialSelect(materialSelect) {
+                fetchMaterials().then(function(response) {
+                    if (response.meta.code === 200) {
+                        response.data.forEach(function(material) {
+                            var optionText = material.id_material + ' | ' + material.Materialname;
+                            materialSelect.append(new Option(optionText, material.id_material));
+                        });
+                    } else {
+                        console.error('Failed to fetch materials:', response.meta.message);
+                    }
+                }).catch(function(error) {
+                    console.error('Error fetching materials:', error);
+                });
+            }
+
+            // Handle Add Material Button Click
+            $('#addMaterialButton').click(function() {
+                const newRow = $(`
+            <tr>
+                <td>
+                    <select class="form-select" name="material[]" required>
+                        <option value="" disabled selected>- Choose Material -</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="number" name="quantity[]" class="form-control" required>
+                </td>
+                <td>
+                    <input type="text" name="unit[]" class="form-control" required>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                        <i class="bi bi-trash bi-middle"></i>
+                    </button>
+                </td>
+            </tr>
+        `);
+                $('#materialTabelBody').append(newRow);
+                populateMaterialSelect(newRow.find('select[name="material[]"]')); // Populate material select for new row
+            });
+
+            // Handle Delete Material Button Click
+            $('#materialTabelBody').on('click', '.deleteMaterialButton', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Handle Form Submission
+            $('#bomForm').submit(function(event) {
+                event.preventDefault(); // Prevent default form submission
+
+                const materials = [];
+                $('#materialTabelBody tr').each(function() {
+                    var materialId = $(this).find('[name="material[]"]').val(); // Get id_material
+                    var material_name = $(this).find('[name="material[]"] option:selected').text().split(' | ')[1]; // Extract material name
+                    var materialQuantity = $(this).find('[name="quantity[]"]').val();
+                    var unit = $(this).find('[name="unit[]"]').val();
+
+                    materials.push({
+                        id_material: materialId,
+                        material_name: material_name,
+                        quantity: materialQuantity,
+                        unit: unit
+                    });
+                });
+
+                // Prepare form data
+                const formData = {
+                    id_product: $('#basicSelect').val(),
+                    productname: $('#basicSelect').find('option:selected').text().split(' | ')[1],
+                    productReference: $('#productReference').val(),
+                    productVariant: $('#productVariant').val(),
+                    quantity: $('#quantity').val(),
+                    materials: materials
+                };
+
+                // Send form data to API
+                $.ajax({
+                    url: `http://localhost:3000/app/api/v1/bom/edit/${bomId}`, // Replace with your API endpoint
+                    method: 'PUT', // Use PUT for updating
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function(response) {
+                        if (response.meta.code === 200) {
+                            alert("BOM updated successfully!");
+                            window.location.href = '../../dist/pages/list-bom.php'; // Redirect to list page
+                        } else {
+                            alert("Error updating BOM: " + response.meta.message);
+                        }
+                    },
+                    error: function(error) {
+                        alert("Error updating BOM: " + error.responseText);
+                    }
+                });
+            });
         });
     </script>
-
 </body>
 
 </html>

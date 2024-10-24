@@ -58,84 +58,75 @@
                             <div class="card">
                                 <div class="card-content">
                                     <div class="card-body">
-                                        <form class="form">
+                                        <form class="form" id="productForm" enctype="multipart/form-data">
                                             <div class="row p-3">
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="city-column" class="mb-2">Name</label>
-                                                        <input type="text" id="first-name-column" class="form-control"
-                                                            name="fname-column">
+                                                        <label for="product-name" class="mb-2">Name</label>
+                                                        <input type="text" id="productname" class="form-control" name="productname" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="last-name-column" class="mb-2">Product Category</label>
+                                                        <label for="product-category" class="mb-2">Product Category</label>
                                                         <fieldset class="form-group">
-                                                            <select class="form-select" id="basicSelect">
+                                                            <select class="form-select" id="productcategory" name="productcategory" required>
                                                                 <option value="" disabled selected>- Choose Category -</option>
-                                                                <option>Minyak Esensial</option>
+                                                                <option value="Cairan">Cairan</option>
+                                                                <option value="Minyak Esensial">Minyak Esensial</option>
                                                             </select>
                                                         </fieldset>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <div class="col d-flex justify-content-start mb-3">
-                                                            <label for="">Is this product a variant?</label>
-                                                        </div>
-                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                                        <label class="form-check-label me-2" for="flexRadioDefault1">
-                                                            Yes
-                                                        </label>
-                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked>
-                                                        <label class="form-check-label" for="flexRadioDefault1">
-                                                            No
-                                                        </label>
+                                                        <label for="variant" class="mb-2">Is this product a variant?</label>
+                                                        <input class="form-check-input me-1" type="radio" name="variant" value="yes">Yes
+                                                        <input class="form-check-input me-1" type="radio" name="variant" value="no" checked>No
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Sales Price</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="Rp.">
+                                                        <label for="sell-price" class="mb-2">Sales Price</label>
+                                                        Total Price (Incl. Taxes): <span id="finalSellPriceDisplay">Rp 0,00</span>  
+
+                                                        <input type="number" id="sellprice" class="form-control" name="sellprice" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Cost</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="Rp.">
+                                                        <label for="make-price" class="mb-2">Cost</label>
+                                                        <input type="number" id="makeprice" class="form-control" name="makeprice" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="country-floating" class="mb-2">Tax</label>
-                                                        <input type="number" id="country-floating" class="form-control"
-                                                            name="country-floating" placeholder="11%" disabled>
+                                                        <label for="tax" class="mb-2">Tax</label>
+                                                        <select class="form-select" id="pajak" name="pajak" required>
+                                                            <option value="" disabled selected>- Choose Category -</option>
+                                                            <option value="11">11</option>
+                                                        </select>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="email-id-column" class="mb-2">Add Image</label>
-                                                        <input type="file" class="form-control" id="inputGroupFile01">
-                                                        <!-- <input type="file" class="image-crop-filepond" image-crop-aspect-ratio="1:1"> -->
+                                                        <label for="image" class="mb-2">Add Image</label>
+                                                        <input type="file" class="form-control" id="image" name="image">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="company-column" class="mb-2">Description</label>
-                                                        <textarea class="form-control" id="exampleFormControlTextarea1"
-                                                            rows="3"></textarea>
+                                                        <label for="description" class="mb-2">Description</label>
+                                                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 d-flex justify-content-end mt-3">
-                                                    <button type="submit"
-                                                        class="btn btn-primary me-2 mb-1">Save</button>
-                                                    <a type="reset"
-                                                        class="btn btn-light-secondary mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
+                                                    <button type="submit" class="btn btn-primary me-2 mb-1">Save</button>
+                                                    <a type="reset" class="btn btn-light-secondary mb-1" href="../../dist/pages/list-produk.php">Cancel</a>
                                                 </div>
                                             </div>
                                         </form>
+
                                     </div>
                                 </div>
                             </div>
@@ -150,6 +141,70 @@
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="../assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        // Listener untuk sell price input
+        document.getElementById('sellprice').addEventListener('input', function() {
+            const sellPrice = parseFloat(this.value) || 0;
+            const taxRate = 0.11; // 11%
+            const finalSellPrice = sellPrice * (1 + taxRate);
+
+            // Tampilkan sell price akhir dalam format mata uang
+            document.getElementById('finalSellPriceDisplay').textContent = formatCurrency(finalSellPrice);
+        });
+
+        document.getElementById('pajak').addEventListener('change', updateSellPriceWithTax);
+
+        function updateSellPriceWithTax() {
+            const sellPrice = parseFloat(document.getElementById('sellprice').value) || 0;
+            const taxRate = parseFloat(document.getElementById('pajak').value) / 100; // Ambil nilai pajak dari dropdown dan konversi ke desimal
+
+            // Hitung nilai sell price
+            const finalSellPrice = sellPrice * (1 + taxRate); // Sell price = Sell price * (1 + tax rate)
+
+            // Tampilkan hasil dalam format mata uang
+            document.getElementById('finalSellPriceDisplay').textContent = formatCurrency(finalSellPrice);
+        }
+
+        // Fungsi untuk format mata uang
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        }
+
+        // Listener untuk submit form
+        document.getElementById('productForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+
+            const formData = new FormData(this); // Collect all form data
+
+            axios.post('http://localhost:3000/app/api/v1/products', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                .then(response => {
+                    console.log('Success:', response.data);
+                    alert(response.data.meta.message); // Show success message
+                    window.location.href = '../../dist/pages/list-produk.php'; // Redirect to list product page
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                    alert('There was an error adding the product.');
+                });
+        });
+    </script>
+
+
+
+
+
+
 </body>
 
 </html>

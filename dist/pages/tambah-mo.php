@@ -85,36 +85,30 @@
                                         <div class="row p-3">
                                             <div class="col-md-6 col-12 mb-3">
                                                 <div class="form-group">
-                                                    <label for="city-column" class="mb-2">Product</label>
+                                                    <label for="productSelect" class="mb-2">Product</label>
                                                     <fieldset class="form-group">
-                                                        <select class="form-select" id="basicSelect">
+                                                        <select class="form-select" id="productSelect">
                                                             <option value="" disabled selected>- Choose Product -</option>
-                                                            <option>Minyak Esensial</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>
                                             </div>
                                             <div class="col-md-6 col-12 mb-3">
                                                 <div class="form-group">
-                                                    <label for="last-name-column" class="mb-2">Bill of Material</label>
+                                                    <label for="bomSelect" class="mb-2">Bill of Material</label>
                                                     <fieldset class="form-group">
-                                                        <select class="form-select" id="basicSelect">
+                                                        <select class="form-select" id="bomSelect">
                                                             <option value="" disabled selected>- Choose Bill of Material -</option>
-                                                            <option>Minyak Esensial</option>
                                                         </select>
                                                     </fieldset>
                                                 </div>
                                             </div>
                                             <div class="col-md-12 col-12 mb-3">
                                                 <div class="form-group">
-                                                    <label for="city-column" class="mb-2">Quantity to Produce</label>
+                                                    <label for="quantityToProduce" class="mb-2">Quantity to Produce</label>
                                                     <div class="input-group mb-3">
-                                                        <input type="number" class="form-control"
-                                                            aria-label="Sizing example input"
-                                                            aria-describedby="inputGroup-sizing-default"
-                                                            step="0.01">
-                                                        <span class="input-group-text"
-                                                            id="inputGroup-sizing-default">Unit</span>
+                                                        <input type="number" class="form-control" id="quantityToProduce" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" step="0.01">
+                                                        <span class="input-group-text" id="inputGroup-sizing-default">Unit</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -135,19 +129,20 @@
                                                     <tbody id="materialTabelBody">
                                                         <tr>
                                                             <td>
-                                                                <input type="text" name="quantity[]" class="form-control" required>
+                                                                <input type="text" name="material[]" class="form-control" required readonly>
                                                             </td>
                                                             <td>
-                                                                <input type="number" name="quantity[]" class="form-control" required>
+                                                                <input type="number" name="toProduce[]" class="form-control to-produce" required>
                                                             </td>
                                                             <td>
-                                                                <input type="number" name="unit[]" class="form-control" required>
+                                                                <input type="number" name="reserved[]" class="form-control" required>
                                                             </td>
                                                             <td>
-                                                                <input type="number" name="unit[]" class="form-control" required>
+                                                                <input type="number" name="consumed[]" class="form-control consumed" required readonly>
                                                             </td>
                                                         </tr>
                                                     </tbody>
+
                                                 </table>
 
                                                 <div id="materialForm" style="display: none;">
@@ -177,10 +172,8 @@
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-end mt-4">
-                                                <button type="submit"
-                                                    class="btn btn-primary me-1 mb-1">Save</button>
-                                                <a type="reset"
-                                                    class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-mo.php">Cancel</a>
+                                                <button type="submit" class="btn btn-primary me-1 mb-1">Save</button>
+                                                <a type="reset" class="btn btn-light-secondary me-1 mb-1" href="../../dist/pages/list-mo.php">Cancel</a>
                                             </div>
                                         </div>
                                     </form>
@@ -203,54 +196,119 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        // Fungsi untuk menambah baris material baru
-        document.getElementById('addMaterialButton').addEventListener('click', function() {
-            var tableBody = document.getElementById('materialTabelBody');
+        $(document).ready(function() {
+            // Object to hold materials and their quantities
+            let materialQuantities = {}; // Define this outside the AJAX success callback
 
-            var newRow = document.createElement('tr');
+            // Fetch products
+            $.ajax({
+                url: 'http://localhost:3000/app/api/v1/product/all',
+                method: 'GET',
+                success: function(response) {
+                    const products = response.data;
+                    products.forEach(function(product) {
+                        const optionText = `${product.id_product} - ${product.Productname}`;
+                        $('#productSelect').append(new Option(optionText, product.id_product));
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching products:', error);
+                }
+            });
 
-            var cell1 = document.createElement('td');
-            var cell2 = document.createElement('td');
-            var cell3 = document.createElement('td');
-            var cell4 = document.createElement('td'); // Kolom Action
+            // Fetch BOMs
+            $.ajax({
+                url: 'http://localhost:3000/app/api/v1/bom/all',
+                method: 'GET',
+                success: function(response) {
+                    const boms = response.data;
+                    boms.forEach(function(bom) {
+                        const optionText = `${bom.id_bom} - ${bom.productname}`;
+                        $('#bomSelect').append(new Option(optionText, bom.id_bom));
+                    });
+                },
+                error: function(error) {
+                    console.error('Error fetching BOMs:', error);
+                }
+            });
 
-            // Dropdown Material
-            cell1.innerHTML = `
-            <select class="form-select" name="material[]" required>
-                <option value="" disabled selected>- Select Material -</option>
-                <option value="Steel">Steel</option>
-                <option value="Aluminum">Aluminum</option>
-                <option value="Plastic">Plastic</option>
-                <option value="Copper">Copper</option>
-            </select>`;
+            // Fetch BOM Overview when a BOM is selected
+            $('#bomSelect').change(function() {
+                const selectedBom = $(this).val();
 
-            // Input Quantity
-            cell2.innerHTML = `<input type="number" name="quantity[]" class="form-control" placeholder="Quantity" required>`;
+                if (selectedBom) {
+                    // Fetch materials and store their quantities first
+                    $.ajax({
+                        url: 'http://localhost:3000/app/api/v1/material/all',
+                        method: 'GET',
+                        success: function(response) {
+                            const materialsData = response.data;
 
-            // Input Unit
-            cell3.innerHTML = `<input type="text" name="unit[]" class="form-control" placeholder="Unit" required>`;
+                            // Store quantities from the response
+                            materialsData.forEach(function(material) {
+                                materialQuantities[material.id_material] = material.Qty; // Store quantity for each material by ID
+                                console.log("Material Quantities:", materialQuantities); // Tambahkan log untuk memeriksa apakah data material sudah benar
+                            });
 
-            // Tombol Delete
-            cell4.innerHTML = `
-            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                <i class="bi bi-trash bi-middle"></i>
-            </button>`;
+                            // After fetching material quantities, fetch the BOM overview
+                            $.ajax({
+                                url: `http://localhost:3000/app/api/v1/bom/${selectedBom}/overview`,
+                                method: 'GET',
+                                success: function(response) {
+                                    const materials = response.data.materials;
+                                    const materialTableBody = $('#materialTabelBody');
 
-            newRow.appendChild(cell1);
-            newRow.appendChild(cell2);
-            newRow.appendChild(cell3);
-            newRow.appendChild(cell4);
+                                    // Clear previous rows
+                                    materialTableBody.empty();
 
-            tableBody.appendChild(newRow);
-        });
+                                    materials.forEach(function(material) {
+                                        const availableQty = materialQuantities[material.id_material] || 0; // Get available quantity from fetched materials
+                                        console.log("Material ID:", material.id_material, "Available Quantity:", availableQty); // Log untuk cek apakah ID dan Qty cocok
 
-        // Event listener untuk tombol delete
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.closest('.deleteMaterialButton')) {
-                e.target.closest('tr').remove();
-            }
+                                        const reservedQty = material.quantity || 0; // Get reserved quantity from BOM
+
+                                        const row = `<tr>
+        <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly></td>
+        <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" required readonly ></td>
+        <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" required readonly></td>
+        <td><input type="number" name="consumed[]" class="form-control consumed" value="${(reservedQty * quantityToProduce || 0).toFixed(8)}" required readonly></td>
+    </tr>`;
+                                        materialTableBody.append(row);
+                                    });
+
+                                },
+                                error: function(error) {
+                                    console.error('Error fetching BOM Overview:', error);
+                                }
+                            });
+                        },
+                        error: function(error) {
+                            console.error('Error fetching materials:', error);
+                        }
+                    });
+                }
+            });
+
+            // Recalculate Consumed when Quantity to Produce changes
+            $('#quantityToProduce').on('input', function() {
+                const quantityToProduce = parseFloat($(this).val()) || 0;
+
+                // Loop through each row in the material table to update Consumed
+                $('#materialTabelBody tr').each(function() {
+                    const toProduceValue = parseFloat($(this).find('.to-produce').val()) || 0;
+                    const consumedInput = $(this).find('.consumed');
+
+                    // Calculate consumed value
+                    const consumedValue = toProduceValue * quantityToProduce;
+                    consumedInput.val(consumedValue);
+                });
+            });
         });
     </script>
+
+
+
+
 
 </body>
 
