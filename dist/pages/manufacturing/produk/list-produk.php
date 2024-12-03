@@ -4,25 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List Product</title>
+    <title>DataTable - Mazer Admin Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/bootstrap.css">
-
-    <link rel="stylesheet" href="../assets/vendors/simple-datatables/style.css">
-
-    <link rel="stylesheet" href="../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
-    <link rel="stylesheet" href="../assets/vendors/bootstrap-icons/bootstrap-icons.css">
-    <link rel="stylesheet" href="../assets/css/app.css">
-    <link rel="shortcut icon" href="../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="stylesheet" href="../../../assets/css/bootstrap.css">
+    <link rel="stylesheet" href="../../../assets/vendors/simple-datatables/style.css">
+    <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="../../../assets/css/app.css">
+    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
 </head>
 
 <body>
     <div id="app">
+
         <!-- Sidebar -->
-        <?php include '../../dist/layouts/_sidebar.php'; ?>
+        <?php include '../../../layouts/_sidebar.php'; ?>
         <!-- Sidebar -->
+
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -39,13 +39,14 @@
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="../../dist/pages/index.php">Dashboard</a></li>
+                                    <li class="breadcrumb-item"><a href="/../../../../../erp-2/dist/pages/index.php">Dashboard</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">List Product</li>
                                 </ol>
                             </nav>
                         </div>
                     </div>
                 </div>
+
                 <section class="section">
                     <div class="card">
                         <div class="card-header">
@@ -98,16 +99,16 @@
             </div>
         </div>
     </div>
-    <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
 
-    <script src="../assets/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Function to fetch data based on selected radio button
         function fetchProducts() {
             const showVariants = document.querySelector('input[name="showVariants"]:checked').value;
-            const apiUrl = showVariants === "yes" ? 
+            const apiUrl = showVariants === "yes" ?
                 'http://localhost:3000/app/api/v1/product/variants/all?page=1' :
                 'http://localhost:3000/app/api/v1/product/all?page=1';
 
@@ -192,7 +193,7 @@
         });
     </script>
 
-    <script src="../assets/js/main.js"></script>
+    <script src="../../../assets/js/main.js"></script>
 </body>
 
 </html>
