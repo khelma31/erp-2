@@ -178,14 +178,14 @@
     </style>
 
 
-    <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="../assets/js/bootstrap.bundle.min.js"></script>
+    <script src="/../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="/../../../assets/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 
-    <script src="../assets/js/main.js"></script>
+    <script src="/../../../assets/js/main.js"></script>
 
     <!-- Import jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

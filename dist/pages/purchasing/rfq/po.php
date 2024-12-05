@@ -60,19 +60,20 @@
                                         <div class="row">
                                             <div class="col d-flex" style="padding: 30px;">
                                                 <div class="btn-group mb-3" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn disabled btn-primary">Request for Quotation</button>
-                                                    <button type="button" class="btn btn-primary no-click">Purchase Order</button>
+                                                    <button type="button" id="rfqButton" class="btn btn-primary" disabled>Request for Quotation</button>
+                                                    <button type="button" id="poButton" class="btn btn-primary" disabled>Purchase Order</button>
                                                 </div>
+
                                             </div>
                                             <div class="col d-flex justify-content-end" style="padding: 30px;">
                                                 <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-danger btn-sm">
+                                                    <a id="sendEmailButton" class="btn btn-outline-danger btn-sm">
                                                         <i class="bi bi-mailbox bi-middle me-1"></i>
                                                         Send by Email
                                                     </a>
                                                 </div>
                                                 <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                                    <a id="exportPdfButton" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
                                                     </a>
@@ -83,7 +84,7 @@
                                             <div class="col d-flex" style="padding-left: 30px;">
                                                 <div class="buttons">
                                                     <a type="button" class="btn btn-outline-primary btn-md"
-                                                    data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+                                                        data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
                                                         Validate
                                                     </a>
                                                 </div>
@@ -133,10 +134,10 @@
                                                 <div class="form-group">
                                                     <label for="city-column" class="mb-2">Vendor</label>
                                                     <fieldset class="form-group">
-                                                        <select class="form-select" id="basicSelect">
-                                                            <option value="" disabled selected>- Choose Vendor -</option>
-                                                            <option>Option 1</option>
+                                                        <select class="form-select" id="vendorSelect">
+
                                                         </select>
+
                                                     </fieldset>
                                                 </div>
                                             </div>
@@ -267,63 +268,168 @@
 
     <!-- Import jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
-        // Fungsi untuk menambah baris material baru
-        document.getElementById('addMaterialButton').addEventListener('click', function() {
-            var tableBody = document.getElementById('materialTabelBody');
-
-            var newRow = document.createElement('tr');
-
-            var cell1 = document.createElement('td');
-            var cell2 = document.createElement('td');
-            var cell3 = document.createElement('td');
-            var cell4 = document.createElement('td');
-            var cell5 = document.createElement('td');
-            var cell6 = document.createElement('td'); // Kolom Action
-
-            // Dropdown Product
-            cell1.innerHTML = `
-            <select class="form-select" name="product[]" required>
-                <option value="" disabled selected>- Select Product -</option>
-                <option value="Steel">Option 1</option>
-            </select>`;
-
-            // Quantity
-            cell2.innerHTML = `<input type="number" name="quantity[]" class="form-control" placeholder="0" required>`;
-
-            // Unit Price
-            cell3.innerHTML = `<input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>`;
-
-            // Tax
-            cell4.innerHTML = `<input type="number" name="tax[]" class="form-control" placeholder="10%" disabled>`;
-
-            // Subtotal
-            cell5.innerHTML = `<input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled>`;
-
-            // Tombol Delete
-            cell6.innerHTML = `
-            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                <i class="bi bi-trash bi-middle"></i>
-            </button>`;
-
-            newRow.appendChild(cell1);
-            newRow.appendChild(cell2);
-            newRow.appendChild(cell3);
-            newRow.appendChild(cell4);
-            newRow.appendChild(cell5);
-            newRow.appendChild(cell6);
-
-            tableBody.appendChild(newRow);
-        });
-
-        // Event listener untuk tombol delete
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.closest('.deleteMaterialButton')) {
-                e.target.closest('tr').remove();
+        $.ajax({
+            url: 'http://localhost:3000/app/api/v1/vendors',
+            type: 'GET',
+            success: function(response) {
+                console.log("Vendors fetched:", response);
+                const vendorSelect = $('#vendorSelect');
+                response.data.forEach(function(vendor) {
+                    vendorSelect.append(new Option(`${vendor.id_vendor} - ${vendor.vendorname}`, vendor.id_vendor));
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error("Failed to fetch vendors:", error);
+                alert('Failed to load vendors.');
             }
         });
+
+        $(document).ready(function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const RfqId = urlParams.get('id'); // Get vendor ID from URL
+            const apiUrl = `http://localhost:3000/app/api/v1/rfq/${RfqId}`;
+
+
+            // Fungsi untuk memuat data RFQ dari API
+            function loadRFQData() {
+                $.ajax({
+                    url: apiUrl,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log("RFQ data fetched:", response);
+
+                        const rfqData = response.data_bom;
+                        console.log("RFQ Data:", rfqData); // Cek data yang diterima
+                        // Mengubah status tombol berdasarkan status RFQ
+                        if (rfqData.status === 'RFQ') {
+                            // Jika status RFQ, aktifkan tombol RFQ
+                            $('#rfqButton').removeAttr('disabled');
+                            $('#poButton').attr('disabled', 'disabled');
+                        } else if (rfqData.status === 'Purchase Order') {
+                            // Jika status PO, aktifkan tombol PO
+                            $('#poButton').removeAttr('disabled');
+                            $('#rfqButton').attr('disabled', 'disabled');
+                        }
+                        // Pastikan rfqData memiliki vendor_id
+                        if (rfqData && rfqData.vendor_id) {
+                            $('#basicSelect').val(rfqData.vendor_id);
+                        } else {
+                            console.log("Vendor ID not found");
+                        }
+
+                        // Mengisi tanggal order
+                        $('#order-date-column').val(rfqData.order_date.split("T")[0]);
+
+                        // Mengisi tabel produk
+                        const tableBody = $('#materialTabelBody');
+                        tableBody.empty(); // Kosongkan tabel sebelum diisi ulang
+
+                        rfqData.products.forEach(product => {
+                            const newRow = `
+        <tr>
+            <td>
+                <select class="form-select" name="product[]" required>
+                    <option value="${product.product_id}" selected>${product.product_id}</option>
+                </select>
+            </td>
+            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" required></td>
+            <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" required></td>
+            <td><input type="number" name="tax[]" class="form-control" value="11" disabled></td>
+            <td><input type="number" name="subtotal[]" class="form-control" value="${product.subtotal}" disabled></td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                    <i class="bi bi-trash bi-middle"></i>
+                </button>
+            </td>
+        </tr>`;
+                            tableBody.append(newRow);
+                        });
+
+                        console.log("Form updated with RFQ data.");
+                    },
+
+                    error: function(xhr, status, error) {
+                        console.error("Failed to fetch RFQ data:", error);
+                        alert('Failed to load RFQ data.');
+                    }
+                });
+            }
+
+            // Panggil fungsi loadRFQData saat halaman dimuat
+            loadRFQData();
+
+            // Fungsi untuk menghapus baris tabel
+            $('#materialTabelBody').on('click', '.deleteMaterialButton', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Fungsi untuk menambah baris baru secara manual
+            $('#addMaterialButton').click(function() {
+                const newRow = `
+                <tr>
+                    <td>
+                        <select class="form-select" name="product[]" required>
+                            <option value="" disabled selected>- Select Product -</option>
+                            <option value="MTR-00001">MTR-00001</option>
+                        </select>
+                    </td>
+                    <td><input type="number" name="quantity[]" class="form-control" placeholder="0" required></td>
+                    <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required></td>
+                    <td><input type="number" name="tax[]" class="form-control" placeholder="11%" disabled></td>
+                    <td><input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled></td>
+                    <td>
+                        <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                            <i class="bi bi-trash bi-middle"></i>
+                        </button>
+                    </td>
+                </tr>`;
+                $('#materialTabelBody').append(newRow);
+            });
+
+            // Event listener untuk tombol kirim email
+            $('#sendEmailButton').click(function() {
+                console.log("Send Email button clicked!");
+
+                // Ambil parameter RFQ ID dari URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const rfqId = urlParams.get('id');
+                console.log("Extracted RFQ ID:", rfqId);
+
+                // Ambil vendor ID dari dropdown
+                const vendorId = $('#vendorSelect').val();
+                console.log("Selected Vendor ID:", vendorId);
+
+                // Validasi input
+                if (!vendorId || !rfqId) {
+                    alert("Vendor ID atau RFQ ID tidak valid!");
+                    console.error("Invalid Vendor ID or RFQ ID. Vendor ID:", vendorId, "RFQ ID:", rfqId);
+                    return;
+                }
+
+                // URL API untuk mengirim email
+                const emailApiUrl = `http://localhost:3000/app/api/v1/rfq/email/${vendorId}?rfq_id=${rfqId}`;
+                console.log("Constructed Email API URL:", emailApiUrl);
+
+                // Memanggil API kirim email
+                $.ajax({
+                    url: emailApiUrl,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log("Email sent successfully. Response:", response);
+                        alert("Email berhasil dikirim!");
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Failed to send email. Status:", status, "Error:", error, "Response:", xhr.responseText);
+                        alert("Gagal mengirim email. Silakan coba lagi.");
+                    }
+                });
+            });
+        });
     </script>
+
 
 </body>
 
