@@ -310,7 +310,7 @@
                         status: 'draft'
 
                     };
-                    window.location.href = '../../dist/pages/list-mo.php';
+                    window.location.href = '../../manufacturing/mo/list-mo.php';
                 }
 
                 $.ajax({

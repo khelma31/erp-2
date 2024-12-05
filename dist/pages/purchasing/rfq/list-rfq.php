@@ -69,31 +69,13 @@
                                     <tr>
                                         <th>Reference</th>
                                         <th>Vendor</th>
-                                        <th>Phone</th>
-                                        <th>Total</th>
+                                        <th>Order Date</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>RFQ-0001</td>
-                                        <td>PT. Seiko</td>
-                                        <td>081234567890</td>
-                                        <td>Rp. 1.000.000</td>
-                                        <td>Request for Quotation</td>
-                                        <td>
-                                            <a type="button" class="btn btn-outline-dark btn-sm me-1" href='po.php'>
-                                                <i class="bi bi-zoom-in bi-middle"></i>
-                                            </a>
-                                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-vendor.php'>
-                                                <i class="bi bi-pencil-square bi-middle"></i>
-                                            </a>
-                                            <a type="button" class="btn btn-outline-danger btn-sm">
-                                                <i class="bi bi-trash-fill bi-middle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <tbody id="rfqTableBody">
+                                    <!-- Data will be populated dynamically here -->
                                 </tbody>
                             </table>
                         </div>
@@ -104,13 +86,64 @@
     </div>
     <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
     <script>
-        // Simple Datatable
-        let table1 = document.querySelector('#table1');
-        let dataTable = new simpleDatatables.DataTable(table1);
+        // Fetch RFQ data from the API and populate the table
+        axios.get('http://localhost:3000/app/api/v1/rfq/all/rfq')
+            .then(response => {
+                const rfqs = response.data.data;
+                const tableBody = document.getElementById('rfqTableBody');
+
+                rfqs.forEach(rfq => {
+                    // Format the date to a more user-friendly format
+                    const formattedDate = new Date(rfq.order_date).toLocaleDateString();
+
+                    const row = `
+                    <tr>
+                        <td>${rfq.id_rfq}</td>
+                        <td>${rfq.id_vendor}</td>
+                        <td>${formattedDate}</td>
+                        <td>${rfq.status}</td>
+                        <td>
+                            <a type="button" class="btn btn-outline-dark btn-sm me-1" href='po.php?id=${rfq.id_rfq}'>
+                                <i class="bi bi-zoom-in bi-middle"></i>
+                            </a>
+                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-rfq.php?id=${rfq.id_rfq}'>
+                                <i class="bi bi-pencil-square bi-middle"></i>
+                            </a>
+                            <a type="button" class="btn btn-outline-danger btn-sm" onclick="deleteRfq('${rfq.id_rfq}')">
+                                <i class="bi bi-trash-fill bi-middle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                `;
+                    tableBody.innerHTML += row;
+                });
+
+                // Initialize the DataTable after the table has been populated
+                let table1 = document.querySelector('#table1');
+                let dataTable = new simpleDatatables.DataTable(table1);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the RFQs!', error);
+            });
+
+        // Function to delete RFQ (add your logic here)
+        function deleteRfq(rfqId) {
+            if (confirm('Are you sure you want to delete this RFQ?')) {
+                axios.delete(`http://localhost:3000/app/api/v1/rfq/${rfqId}`)
+                    .then(response => {
+                        alert('RFQ deleted successfully!');
+                        location.reload(); // Reload the page to update the list
+                    })
+                    .catch(error => {
+                        console.error('There was an error deleting the RFQ!', error);
+                    });
+            }
+        }
     </script>
+
 
     <script src="../../../assets/js/main.js"></script>
 </body>

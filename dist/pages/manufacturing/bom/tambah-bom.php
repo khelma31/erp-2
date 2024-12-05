@@ -326,7 +326,7 @@
                     data: JSON.stringify(postData),
                     success: function(response) {
                         alert('Data saved successfully!');
-                        window.location.href = '../../dist/pages/list-bom.php';
+                        window.location.href = '../../manufacturing/bom/list-bom.php';
                     },
                     error: function(xhr, status, error) {
                         console.error('Error saving data:', error);

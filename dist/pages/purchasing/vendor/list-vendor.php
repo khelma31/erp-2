@@ -75,22 +75,8 @@
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>VN-0001</td>
-                                        <td>PT. Seiko</td>
-                                        <td>081234567890</td>
-                                        <td>seiko@gmail.com</td>
-                                        <td>Jl. Mangga</td>
-                                        <td>
-                                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-vendor.php'>
-                                                <i class="bi bi-pencil-square bi-middle"></i>
-                                            </a>
-                                            <a type="button" class="btn btn-outline-danger btn-sm">
-                                                <i class="bi bi-trash-fill bi-middle"></i>
-                                            </a>
-                                        </td>
-                                    </tr>
+                                <tbody id="vendorTableBody">
+                                    <!-- Data will be inserted here dynamically -->
                                 </tbody>
                             </table>
                         </div>
@@ -99,14 +85,63 @@
             </div>
         </div>
     </div>
+
     <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
 
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Simple Datatable
-        let table1 = document.querySelector('#table1');
-        let dataTable = new simpleDatatables.DataTable(table1);
+        // Fetch vendor data from API and populate the table
+        axios.get('http://localhost:3000/app/api/v1/vendors')
+            .then(response => {
+                const vendors = response.data.data;
+                const tableBody = document.getElementById('vendorTableBody');
+
+                vendors.forEach(vendor => {
+                    const row = `
+                    <tr>
+                        <td>${vendor.id_vendor}</td>
+                        <td>${vendor.vendorname}</td>
+                        <td>${vendor.phone}</td>
+                        <td>${vendor.email}</td>
+                        <td>${vendor.addressone}</td>
+                        <td>
+                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-vendor.php?id=${vendor.id_vendor}'>
+                                <i class="bi bi-pencil-square bi-middle"></i>
+                            </a>
+                            <a type="button" class="btn btn-outline-danger btn-sm" onclick="deleteVendor('${vendor.id_vendor}')">
+                                <i class="bi bi-trash-fill bi-middle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+
+                // Initialize the DataTable after the table has been populated
+                let table1 = document.querySelector('#table1');
+                let dataTable = new simpleDatatables.DataTable(table1);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the vendors!', error);
+            });
+
+        // Function to delete a vendor
+        function deleteVendor(id) {
+            if (confirm(`Are you sure you want to delete Vendor with ID ${id}?`)) {
+                axios.delete(`http://localhost:3000/app/api/v1/vendor/${id}`)
+                    .then(response => {
+                        alert('Vendor deleted successfully!');
+                        // Reload the page to refresh the table after deletion
+                        location.reload();
+                    })
+                    .catch(error => {
+                        console.error('There was an error deleting the Vendor!', error);
+                        alert('Error deleting Vendor.');
+                    });
+            }
+        }
     </script>
 
     <script src="../../../assets/js/main.js"></script>

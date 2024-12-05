@@ -188,7 +188,7 @@
                 .then(response => {
                     console.log('Success:', response.data);
                     alert(response.data.meta.message); // Show success message
-                    window.location.href = '../../dist/pages/list-produk.php'; // Redirect to list product page
+                    window.location.href = '../../manufacturing/produk/list-produk.php'; // Redirect to list product page
                 })
                 .catch(error => {
                     console.error('There was an error!', error);

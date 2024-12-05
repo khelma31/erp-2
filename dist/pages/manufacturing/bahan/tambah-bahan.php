@@ -135,6 +135,7 @@
     <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script>
         document.getElementById('materialForm').addEventListener('submit', function(event) {
@@ -151,7 +152,7 @@
                     console.log('Success:', response.data);
                     alert(response.data.meta.message); // Show success message
                     // Optionally redirect to the list page or reset the form
-                    window.location.href = '../../dist/pages/list-bahan.php';
+                    window.location.href = '../../manufacturing/bahan/list-bahan.php';
                 })
                 .catch(error => {
                     console.error('There was an error!', error);

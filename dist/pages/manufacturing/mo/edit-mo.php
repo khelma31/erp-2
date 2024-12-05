@@ -181,6 +181,10 @@
     <script src="../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/bootstrap.bundle.min.js"></script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+
     <script src="../assets/js/main.js"></script>
 
     <!-- Import jQuery -->
@@ -191,10 +195,11 @@
             const urlParams = new URLSearchParams(window.location.search);
             const moId = urlParams.get('id');
 
-            // Buat variabel global untuk menyimpan kuantitas material
+            // Variables to store material quantities and overview
             let materialQuantities = {};
             let bomOverview = [];
             let allMaterialsAvailable = true;
+            let materialsToReduce = [];
 
             if (moId) {
                 $.ajax({
@@ -204,12 +209,12 @@
                         if (response.meta.code === 200) {
                             const data = response.data;
 
-                            // Isi form dengan data dari API
+                            // Populate form fields
                             $('#productSelect').append(`<option value="${data.id_product}" selected>${data.id_product}</option>`);
                             $('#bomSelect').append(`<option value="${data.id_bom}" selected>${data.id_bom}</option>`);
                             $('#quantityToProduce').val(data.qtytoproduce);
 
-                            // Sesuaikan status tombol
+                            // Update button status based on MO status
                             if (data.status === 'draft') {
                                 $('#draftButton').addClass('highlighted').removeClass('disabled');
                                 $('#saveButton').text('Confirm');
@@ -223,7 +228,7 @@
                                 $('#doneButton').addClass('highlighted').removeClass('disabled');
                             }
 
-                            // Panggil fetchMaterialQuantities terlebih dahulu untuk mendapatkan data material, kemudian panggil fetchBOMOverview
+                            // Fetch material quantities and BOM overview
                             fetchMaterialQuantities(() => {
                                 fetchBOMOverview(data.id_bom, data.qtytoproduce);
                             });
@@ -239,7 +244,7 @@
                 console.error('ID tidak ditemukan di URL');
             }
 
-            // Fungsi untuk mengambil kuantitas material
+            // Fetch material quantities
             function fetchMaterialQuantities(callback) {
                 $.ajax({
                     url: 'http://localhost:3000/app/api/v1/material/all',
@@ -248,7 +253,7 @@
                         response.data.forEach(function(material) {
                             materialQuantities[material.Materialname] = material.Qty || 0;
                         });
-                        callback(); // Panggil callback setelah data material diambil
+                        callback(); // Call the callback after materials are fetched
                     },
                     error: function(error) {
                         Toastify({
@@ -261,7 +266,7 @@
                 });
             }
 
-            // Fungsi untuk mengambil BOM dan mengisi tabel material
+            // Fetch BOM overview
             function fetchBOMOverview(bomId, qtyToProduce) {
                 $.ajax({
                     url: `http://localhost:3000/app/api/v1/bom/${bomId}/overview`,
@@ -278,14 +283,15 @@
                             const consumedQty = (reservedQty * qtyToProduce).toFixed(2);
 
                             const row = `
-                        <tr>
-                            <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly></td>
-                            <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
-                            <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
-                            <td><input type="number" name="consumed[]" class="form-control consumed" value="${consumedQty}" readonly></td>
-                        </tr>`;
+                <tr>
+                    <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly data-name="${material.material}"></td>
+                    <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
+                    <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
+                    <td><input type="number" name="consumed[]" class="form-control consumed" value="${consumedQty}" readonly></td>
+                </tr>`;
                             materialTableBody.append(row);
                         });
+
                         checkMaterialAvailability();
                     },
                     error: function(error) {
@@ -299,7 +305,7 @@
                 });
             }
 
-            // Event listener untuk tombol "Confirm"
+            // Event listener for save button
             $('#saveButton').click(function() {
                 if ($(this).text() === 'Confirm') {
                     $.ajax({
@@ -328,17 +334,36 @@
                 } else if ($(this).text() === 'Check Availability') {
                     let allMaterialsAvailable = true;
                     $('#materialTabelBody tr').each(function() {
-                        const reserved = parseFloat($(this).find('input[name="reserved[]"]').val());
+                        const materialName = $(this).find('input[name="material[]"]').data('name'); // Mengambil nama material
                         const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
 
-                        if (reserved < consumed) {
-                            $(this).find('input[name="consumed[]"]').addClass('bg-danger').removeClass('bg-success');
-                            allMaterialsAvailable = false;
-                        } else {
-                            $(this).find('input[name="consumed[]"]').addClass('bg-success').removeClass('bg-danger');
+                        if (consumed > 0) {
+                            materialsToReduce.push({
+                                MaterialName: materialName, // Menggunakan nama material
+                                Qty: consumed // Menggunakan jumlah yang dikonsumsi
+                            });
                         }
                     });
 
+                    // Memanggil fungsi checkAvailability setelah tombol Check Availability diklik
+                    checkMaterialAvailability();
+
+                    function checkMaterialAvailability() {
+                        let allMaterialsAvailable = true; // Pastikan ini diset ulang
+                        $('#materialTabelBody tr').each(function() {
+                            const reserved = parseFloat($(this).find('input[name="reserved[]"]').val());
+                            const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
+
+                            if (reserved < consumed) {
+                                $(this).find('input[name="consumed[]"]').addClass('bg-danger').removeClass('bg-success');
+                                allMaterialsAvailable = false;
+                            } else {
+                                $(this).find('input[name="consumed[]"]').addClass('bg-success').removeClass('bg-danger');
+                            }
+                        });
+                    }
+
+                    // Lanjutkan dengan proses lainnya jika semua bahan tersedia
                     if (allMaterialsAvailable) {
                         $('#saveButton').text('Produce');
                         $('#availabilityButton').removeClass('disabled').addClass('highlighted');
@@ -348,35 +373,104 @@
                         $('#produceButton').addClass('disabled').removeClass('highlighted');
                     }
                 } else if ($(this).text() === 'Produce') {
-                    $.ajax({
-                        url: 'http://localhost:3000/app/api/v1/mo/status/confirm',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            id_mo: moId
-                        }),
-                        success: function(response) {
-                            if (response.meta.code === 200) {
-                                Toastify({
-                                    text: "Production started",
-                                    duration: 3000,
-                                    gravity: "top",
-                                    backgroundColor: "#4CAF50"
-                                }).showToast();
-                                $('#doneButton').removeClass('disabled').addClass('highlighted');
-                                $('#produceButton').removeClass('disabled').addClass('highlighted');
+                    if (allMaterialsAvailable) {
+                        if (confirm("Are you sure you want to reduce materials?")) {
+                            console.log("Confirmation received, reducing materials...");
+
+                            // Loop through the rows and add materials to the reduction list
+                            $('#materialTabelBody tr').each(function() {
+                                const materialId = $(this).find('input[name="material[]"]').val();
+                                const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
+
+                                if (consumed > 0) {
+                                    materialsToReduce.push({
+                                        MaterialId: materialId, // MaterialId from the row
+                                        Qty: consumed // Qty from the Consumed field
+                                    });
+                                }
+                            });
+
+                            // Check if there are materials to reduce
+                            if (materialsToReduce.length === 0) {
+                                console.log("No materials to reduce.");
+                            } else {
+                                console.log("Materials to reduce:", materialsToReduce);
+
+                                // Disable the "Produce" button and show loading state
+                                $('#produceButton').addClass('disabled');
+
+                                // Disable Check Availability button (if it exists)
+                                $('#checkAvailabilityButton').prop('disabled', true);
+
+                                Promise.all(
+                                        materialsToReduce.map(material => {
+                                            console.log(`Reducing material with Name ${material.MaterialName}, Qty: ${material.Qty}`);
+
+                                            return fetch('http://localhost:3000/app/api/v1/material/reducemat', {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json'
+                                                    },
+                                                    body: JSON.stringify(material)
+                                                })
+                                                .then(response => response.json())
+                                                .then(data => {
+                                                    console.log("API response data:", data);
+                                                    if (data.success) {
+                                                        console.log(`Material ${material.MaterialName} reduced by ${material.Qty}`);
+                                                    } else {
+                                                        console.error(`Failed to reduce material ${material.MaterialName}. Response:`, data);
+                                                    }
+                                                })
+                                                .catch(error => {
+                                                    console.error('Error during material reduction:', error);
+                                                });
+                                        })
+                                    )
+                                    .then(() => {
+                                        // After materials are reduced, call for confirmation
+                                        $.ajax({
+                                            url: 'http://localhost:3000/app/api/v1/mo/status/confirm',
+                                            method: 'POST',
+                                            contentType: 'application/json',
+                                            data: JSON.stringify({
+                                                id_mo: moId
+                                            }),
+                                            success: function(response) {
+                                                if (response.meta.code === 200) {
+                                                    // Update status tombol di sini
+                                                    $('#saveButton').text('Produce');
+                                                    $('#produceButton').removeClass('disabled').addClass('highlighted');
+                                                    $('#availabilityButton').removeClass('highlighted').addClass('disabled');
+                                                    Toastify({
+                                                        text: "Production started",
+                                                        duration: 3000,
+                                                        gravity: "top",
+                                                        backgroundColor: "#4CAF50"
+                                                    }).showToast();
+                                                }
+                                            },
+                                            error: function(error) {
+                                                Toastify({
+                                                    text: "Failed to start production",
+                                                    duration: 3000,
+                                                    gravity: "top",
+                                                    backgroundColor: "#f44336"
+                                                }).showToast();
+                                            }
+                                        });
+                                    })
+                                    .finally(() => {
+                                        // Re-enable the buttons after the process is finished
+                                        $('#checkAvailabilityButton').prop('disabled', false);
+                                    });
                             }
-                        },
-                        error: function(error) {
-                            Toastify({
-                                text: "Failed to start production",
-                                duration: 3000,
-                                gravity: "top",
-                                backgroundColor: "#f44336"
-                            }).showToast();
                         }
-                    });
+                    }
                 } else if ($(this).text() === 'Done') {
+                    console.log("Starting process: Mark MO as Done");
+
+                    // Mark MO as done
                     $.ajax({
                         url: 'http://localhost:3000/app/api/v1/mo/status/confirm',
                         method: 'POST',
@@ -385,21 +479,57 @@
                             id_mo: moId
                         }),
                         success: function(response) {
-                            if (response.meta.code === 200) {
-                                Toastify({
-                                    text: "Done",
-                                    duration: 3000,
-                                    gravity: "top",
-                                    backgroundColor: "#4CAF50"
-                                }).showToast();
-                                $('#doneButton').removeClass('disabled').addClass('highlighted');
-                                $('#produceButton').removeClass('disabled').addClass('highlighted');
-                                $('#backToListButton').removeClass('d-none').addClass('highlighted');
+                            console.log("MO marked as done successfully:", response);
+
+                            // Get the ProductId and Quantity to Produce from the response or your form
+                            var productId = $('#productSelect').val(); // Assume product field has the ProductId
+                            var qtyToProduce = $('#quantityToProduce').val(); // Assume quantity field has the Qty
+
+                            console.log("ProductId:", productId);
+                            console.log("QtyToProduce:", qtyToProduce);
+
+                            // Validate that ProductId and Qty are not empty
+                            if (!productId || !qtyToProduce) {
+                                console.error("ProductId or QtyToProduce is missing!");
+                                return;
                             }
+
+                            // Make API call to increase product quantity
+                            $.ajax({
+                                url: 'http://localhost:3000/app/api/v1/product/increase',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    ProductId: productId,
+                                    Qty: parseFloat(qtyToProduce) // Ensure the quantity is a valid float
+                                }),
+                                success: function(increaseResponse) {
+                                    console.log("Product quantity increased successfully:", increaseResponse);
+
+                                    $('#produceButton').removeClass('highlighted').addClass('disabled');
+                                    $('#doneButton').removeClass('disabled').addClass('highlighted');
+                                    Toastify({
+                                        text: "MO is done and product quantity updated",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        backgroundColor: "#4CAF50"
+                                    }).showToast();
+                                },
+                                error: function(increaseError) {
+                                    console.error("Error updating product quantity:", increaseError);
+                                    Toastify({
+                                        text: "MO done, but failed to update product quantity",
+                                        duration: 3000,
+                                        gravity: "top",
+                                        backgroundColor: "#f44336"
+                                    }).showToast();
+                                }
+                            });
                         },
                         error: function(error) {
+                            console.error("Error marking MO as done:", error);
                             Toastify({
-                                text: "Failed done",
+                                text: "Failed to mark MO as done",
                                 duration: 3000,
                                 gravity: "top",
                                 backgroundColor: "#f44336"
@@ -408,20 +538,8 @@
                     });
                 }
             });
-
-
         });
     </script>
-
-
-
-
-
-
-
-
-
-
 </body>
 
 </html>

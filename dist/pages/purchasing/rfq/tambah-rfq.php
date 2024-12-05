@@ -4,25 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <title>Add RFQ</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/bootstrap.css">
-    <link rel="stylesheet" href="../../../assets/vendors/simple-datatables/style.css">
-    <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
 </head>
 
 <body>
     <div id="app">
-
         <!-- Sidebar -->
         <?php include '../../../layouts/_sidebar.php'; ?>
-        <!-- Sidebar -->
-
+        <!-- Main Content -->
         <div id="main">
             <header class="mb-3">
                 <a href="#" class="burger-btn d-block d-xl-none">
@@ -47,10 +40,11 @@
                         </div>
                     </div>
                 </div>
+
                 <section id="multiple-column-form">
                     <div class="row match-height">
                         <div class="col-12">
-                            <div class="card">
+                            <div class="card">b 
                                 <div class="card-content">
                                     <div class="card-header">
                                         <div class="row">
@@ -78,204 +72,197 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                    <form class="form">
+                                    <!-- Form -->
+                                    <form id="rfqForm">
+                                        <!-- Vendor and Order Date -->
                                         <div class="row p-3">
                                             <div class="col-md-6 col-12 mb-3">
-                                                <div class="form-group">
-                                                    <label for="city-column" class="mb-2">Vendor</label>
-                                                    <fieldset class="form-group">
-                                                        <select class="form-select" id="basicSelect">
-                                                            <option value="" disabled selected>- Choose Vendor -</option>
-                                                            <option>Option 1</option>
-                                                        </select>
-                                                    </fieldset>
-                                                </div>
+                                                <label for="vendorSelect" class="form-label">Vendor</label>
+                                                <select class="form-select" id="vendorSelect" required>
+                                                    <option value="" disabled selected>- Choose Vendor -</option>
+                                                </select>
                                             </div>
                                             <div class="col-md-6 col-12 mb-3">
-                                                <div class="form-group">
-                                                    <label for="last-name-column" class="mb-2">Order Date</label>
-                                                    <input type="date" id="order-date-column" name="order_date" class="form-control">
-                                                </div>
+                                                <label for="order-date-column" class="form-label">Order Date</label>
+                                                <input type="date" id="order-date-column" name="order_date" class="form-control" required>
                                             </div>
                                         </div>
-                                    </form>
-                                    <form class="form">
-                                        <div class="row p-3">
-                                            <div class="page-title">
-                                                <div class="row">
-                                                    <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                                                        <h5>Input Material</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <div class="row">
-                                                    <div class="col-md-12 col-12 d-flex justify-content-end">
-                                                        <button type="button" class="btn btn-outline-primary btn-sm" id="addMaterialButton">
-                                                            <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
-                                                    </div>
-                                                </div>
-                                                <table class="table mt-3" id="materialTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product</th>
-                                                            <th>Quantity</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Tax</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="materialTabelBody">
-                                                        <tr>
-                                                            <td>
-                                                                <select class="form-select" name="product[]" required>
-                                                                    <option value="" disabled selected>- Select Product -</option>
-                                                                    <option value="Steel">Option 1</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="quantity[]" class="form-control" placeholder="0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="tax[]" class="form-control" placeholder="10%" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                                                                    <i class="bi bi-trash bi-middle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
 
-                                                <div id="materialForm" style="display: none;">
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialProduct">Product</label>
-                                                                <input type="text" class="form-control" id="materialProduct">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialQuantity">Quantity</label>
-                                                                <input type="text" class="form-control" id="materialQuantity">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialUnit">Unit Price</label>
-                                                                <input type="text" class="form-control" id="materialPrice">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialTax">Tax</label>
-                                                                <input type="number" class="form-control" id="materialTax">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialSubtotal">Subtotal</label>
-                                                                <input type="number" class="form-control" id="materialSubtotal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary" id="submitBahanButton">Tambahkan Bahan</button>
-                                                </div>
+                                        <!-- Material Table -->
+                                        <div class="table-responsive">
+                                            <button type="button" class="btn btn-outline-primary btn-sm mb-3" id="addMaterialButton">
+                                                <i class="bi bi-plus-square me-2"></i>Add Material
+                                            </button>
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Material</th>
+                                                        <th>Quantity</th>
+                                                        <th>Unit Price</th>
+                                                        <th>Tax (%)</th>
+                                                        <th>Subtotal</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="materialTabelBody">
+                                                    <tr>
+                                                        <td>
+                                                            <select class="form-select" name="material[]" required>
+                                                                <option value="" disabled selected>- Select Material -</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="quantity[]" class="form-control" placeholder="0" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="tax[]" class="form-control" value="11" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                                                                <i class="bi bi-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
 
-                                            </div>
-
-                                            <div class="col-12 d-flex justify-content-end mt-5">
-                                                <button type="submit"
-                                                    class="btn btn-primary me-2 mb-1">Save</button>
-                                                <a type="reset"
-                                                    class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/purchasing/rfq/list-rfq.php">Cancel</a>
-                                            </div>
+                                        <!-- Submit Buttons -->
+                                        <div class="d-flex justify-content-end mt-3">
+                                            <button type="submit" class="btn btn-primary">Save</button>
+                                            <a href="../../purchasing/rfq/list-rfq.php" class="btn btn-secondary ms-2">Cancel</a>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
             </div>
-            </section>
         </div>
+    </div>
 
-    </div>
-    </div>
-    <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <!-- JavaScript -->
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
-
-    <script src="../../../assets/js/main.js"></script>
-
-    <!-- Import jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        // Fungsi untuk menambah baris material baru
-        document.getElementById('addMaterialButton').addEventListener('click', function() {
-            var tableBody = document.getElementById('materialTabelBody');
+        $(document).ready(function() {
+            // Fetch vendors
+            $.ajax({
+                url: 'http://localhost:3000/app/api/v1/vendors',
+                type: 'GET',
+                success: function(response) {
+                    const vendorSelect = $('#vendorSelect');
+                    response.data.forEach(function(vendor) {
+                        vendorSelect.append(new Option(`${vendor.id_vendor} - ${vendor.vendorname}`, vendor.id_vendor));
+                    });
+                },
+                error: function() {
+                    alert('Failed to load vendors.');
+                }
+            });
 
-            var newRow = document.createElement('tr');
-
-            var cell1 = document.createElement('td');
-            var cell2 = document.createElement('td');
-            var cell3 = document.createElement('td');
-            var cell4 = document.createElement('td');
-            var cell5 = document.createElement('td');
-            var cell6 = document.createElement('td'); // Kolom Action
-
-            // Dropdown Product
-            cell1.innerHTML = `
-            <select class="form-select" name="product[]" required>
-                <option value="" disabled selected>- Select Product -</option>
-                <option value="Steel">Option 1</option>
-            </select>`;
-
-            // Quantity
-            cell2.innerHTML = `<input type="number" name="quantity[]" class="form-control" placeholder="0" required>`;
-
-            // Unit Price
-            cell3.innerHTML = `<input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>`;
-
-            // Tax
-            cell4.innerHTML = `<input type="number" name="tax[]" class="form-control" placeholder="10%" disabled>`;
-
-            // Subtotal
-            cell5.innerHTML = `<input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled>`;
-
-            // Tombol Delete
-            cell6.innerHTML = `
-            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                <i class="bi bi-trash bi-middle"></i>
-            </button>`;
-
-            newRow.appendChild(cell1);
-            newRow.appendChild(cell2);
-            newRow.appendChild(cell3);
-            newRow.appendChild(cell4);
-            newRow.appendChild(cell5);
-            newRow.appendChild(cell6);
-
-            tableBody.appendChild(newRow);
-        });
-
-        // Event listener untuk tombol delete
-        document.addEventListener('click', function(e) {
-            if (e.target && e.target.closest('.deleteMaterialButton')) {
-                e.target.closest('tr').remove();
+            // Fetch materials
+            function fetchMaterials(materialSelect) {
+                $.ajax({
+                    url: 'http://localhost:3000/app/api/v1/material/all',
+                    type: 'GET',
+                    success: function(response) {
+                        response.data.forEach(function(material) {
+                            materialSelect.append(new Option(`${material.id_material} - ${material.Materialname}`, material.id_material));
+                        });
+                    },
+                    error: function() {
+                        alert('Failed to load materials.');
+                    }
+                });
             }
+
+            fetchMaterials($('#materialTabelBody select[name="material[]"]'));
+
+            // Add new material row
+            $('#addMaterialButton').click(function() {
+                const newRow = `
+                    <tr>
+                        <td>
+                            <select class="form-select" name="material[]" required>
+                                <option value="" disabled selected>- Select Material -</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="quantity[]" class="form-control" required></td>
+                        <td><input type="number" name="unitPrice[]" class="form-control" required></td>
+                        <td><input type="number" name="tax[]" class="form-control" value="11" readonly></td>
+                        <td><input type="number" name="subtotal[]" class="form-control" readonly></td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                const newRowElement = $(newRow);
+                $('#materialTabelBody').append(newRowElement);
+                fetchMaterials(newRowElement.find('select[name="material[]"]'));
+            });
+
+            // Delete material row
+            $('#materialTabelBody').on('click', '.deleteMaterialButton', function() {
+                $(this).closest('tr').remove();
+            });
+
+            // Submit form
+            $('#rfqForm').submit(function(e) {
+                e.preventDefault();
+
+                const id_vendor = $('#vendorSelect').val();
+                const order_date = $('#order-date-column').val();
+                const products = [];
+
+                $('#materialTabelBody tr').each(function() {
+                    const materialId = $(this).find('select[name="material[]"]').val();
+                    const quantity = $(this).find('input[name="quantity[]"]').val();
+                    const unitPrice = $(this).find('input[name="unitPrice[]"]').val();
+                    const subtotal = (quantity * unitPrice * 1.11).toFixed(2);
+
+                    if (materialId && quantity && unitPrice) {
+                        products.push({
+                            id_product: materialId,
+                            quantity: quantity,
+                            unitprice: unitPrice,
+                            tax: "11%",
+                            subtotal: subtotal
+                        });
+                    }
+                });
+
+                const postData = {
+                    id_vendor,
+                    order_date,
+                    products
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/app/api/v1/rfq',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(postData),
+                    success: function() {
+                        alert('RFQ submitted successfully!');
+                        window.location.href = '../../purchasing/rfq/list-rfq.php';
+                    },
+                    error: function() {
+                        alert('Failed to submit RFQ.');
+                    }
+                });
+            });
         });
     </script>
-
 </body>
 
 </html>
