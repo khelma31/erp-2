@@ -69,7 +69,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col d-flex justify-content-end" style="padding: 30px;">
+                                            <div class="col d-flex justify-content-end" style="padding: 30px; padding-right: 16px;">
                                                 <div class="buttons">
                                                     <a type="button" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
@@ -153,7 +153,7 @@
                                                 <button id="backToListButton" class="btn btn-primary d-none" onclick="window.location.href='list-bom.php';">
                                                     Back to List
                                                 </button>
-                                                <a type="reset" class="btn btn-light-secondary me-1 mb-1" href="/../../../../erp-2/dist/pages/manufacturing/mo/list-mo.php">Cancel</a>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/manufacturing/mo/list-mo.php">Cancel</a>
                                             </div>
                                         </div>
                                     </form>

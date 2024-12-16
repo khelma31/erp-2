@@ -77,6 +77,8 @@
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="variant" class="mb-2">Is this product a variant?</label>
+                                                    </div>
+                                                    <div class="form-group">
                                                         <input class="form-check-input me-1" type="radio" name="variant" value="yes">Yes
                                                         <input class="form-check-input me-1" type="radio" name="variant" value="no" checked>No
                                                     </div>

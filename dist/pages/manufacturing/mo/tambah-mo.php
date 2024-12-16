@@ -63,7 +63,7 @@
                                                     <button type="button" class="btn disabled btn-primary">Mark As Done</button>
                                                 </div>
                                             </div>
-                                            <div class="col d-flex justify-content-end" style="padding: 30px;">
+                                            <div class="col d-flex justify-content-end" style="padding: 30px; padding-right: 16px;">
                                                 <div class="buttons">
                                                     <a type="button" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
@@ -139,15 +139,12 @@
                                                     </tbody>
 
                                                 </table>
-
-                                                <button type="button" class="btn btn-primary" id="submitBahanButton">Tambahkan Bahan</button>
                                             </div>
 
-                                        </div>
-
-                                        <div class="col-12 d-flex justify-content-end mt-4">
-                                            <button type="button" class="btn btn-primary me-1 mb-1" id="saveButton" data-status="draft">Save</button>
-                                            <a type="reset" class="btn btn-light-secondary me-1 mb-1" href="/../../../../erp-2/dist/pages/manufacturing/mo/list-mo.php">Cancel</a>
+                                            <div class="col-12 d-flex justify-content-end mt-4">
+                                                <button type="button" class="btn btn-primary me-1 mb-1" id="saveButton" data-status="draft">Save</button>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/manufacturing/mo/list-mo.php">Cancel</a>
+                                            </div>
                                         </div>
                                 </div>
                                 </form>

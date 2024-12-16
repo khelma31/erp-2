@@ -94,14 +94,24 @@
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label class="mb-2">Is this product a variant?</label>
-                                                        <div class="form-check">
+                                                        <!-- <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
                                                             <label class="form-check-label" for="variantYes">Yes</label>
                                                         </div>
                                                         <div class="form-check">
                                                             <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
                                                             <label class="form-check-label" for="variantNo">No</label>
-                                                        </div>
+                                                        </div> -->
+                                                    </div>
+                                                    <div class="form-group">
+                                                        
+                                                            <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
+                                                            <label class="form-check-label" for="variantYes">Yes</label>
+                                                        
+                                                        
+                                                            <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
+                                                            <label class="form-check-label" for="variantNo">No</label>
+                                                        
                                                     </div>
                                                 </div>
 

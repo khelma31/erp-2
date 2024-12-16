@@ -29,14 +29,14 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>Add Request for Quotation</h3>
+                            <h3>Add Quotations</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/../../../../../erp-2/dist/pages/index.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item"><a href="/../../../../erp-2/dist/pages/purchasing/rfq/list-rfq.php">List Request for Quotation</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">Add Request for Quotation</li>
+                                    <li class="breadcrumb-item"><a href="/../../../../erp-2/dist/pages/sales/quotations/list-quotation.php">List Quotations</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Add Quotations</li>
                                 </ol>
                             </nav>
                         </div>
@@ -50,13 +50,13 @@
                                 <div class="card-content">
                                     <div class="card-header">
                                         <div class="row">
-                                            <div class="col d-flex" style="padding: 30px;">
+                                            <div class="col d-flex" style="padding: 30px; padding-right: 16px;">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
-                                                    <button type="button" class="btn btn-primary">Request for Quotation</button>
-                                                    <button type="button" class="btn disabled btn-primary">Purchase Order</button>
+                                                    <button type="button" class="btn btn-primary">Quotation</button>
+                                                    <button type="button" class="btn disabled btn-primary">Sales Order</button>
                                                 </div>
                                             </div>
-                                            <div class="col d-flex justify-content-end" style="padding: 30px;">
+                                            <div class="col d-flex justify-content-end" style="padding: 30px; padding-right: 16px;">
                                                 <div class="buttons">
                                                     <a type="button" class="btn btn-outline-danger btn-sm">
                                                         <i class="bi bi-mailbox bi-middle me-1"></i>
@@ -79,14 +79,26 @@
                                         <!-- Vendor and Order Date -->
                                         <div class="row p-3">
                                             <div class="col-md-6 col-12 mb-3">
-                                                <label for="vendorSelect" class="form-label">Vendor</label>
+                                                <label for="vendorSelect" class="form-label">Customer</label>
                                                 <select class="form-select" id="vendorSelect" required>
-                                                    <option value="" disabled selected>- Choose Vendor -</option>
+                                                    <option value="" disabled selected>- Choose Customer -</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6 col-12 mb-3">
-                                                <label for="order-date-column" class="form-label">Order Date</label>
-                                                <input type="date" id="order-date-column" name="order_date" class="form-control" required>
+                                                <label for="order-date-column" class="form-label">Expiration Date</label>
+                                                <input type="date" id="order-date-column" name="order-date-column" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <label for="currency" class="form-label">Currency</label>
+                                                <input type="text" id="currency" name="currency" class="form-control" placeholder="IDR" disabled>
+                                            </div>
+                                            <div class="col-md-6 col-12 mb-3">
+                                                <label for="payment" class="form-label">Payment Terms</label>
+                                                <select class="form-select" id="paymentSelect" required>
+                                                    <option value="" disabled selected>- Choose Payment -</option>
+                                                    <option value="Immediate Payment">Immediate Payment</option>
+                                                    <option value="End of Following Month">End of Following Month</option>
+                                                </select>
                                             </div>
                                         </div>
 
@@ -94,7 +106,7 @@
                                             <div class="page-title">
                                                 <div class="row">
                                                     <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                                                        <h5>Input Material</h5>
+                                                        <h5>Input Product</h5>
                                                     </div>
                                                 </div>
                                             </div>
@@ -103,15 +115,15 @@
                                                     <div class="col-md-12 col-12 d-flex justify-content-end">
                                                         <button
                                                             type="button"
-                                                            class="btn btn-outline-primary btn-sm me-2"
+                                                            class="btn btn-outline-primary btn-sm"
                                                             id="addMaterialButton">
-                                                            <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
+                                                            <i class="bi bi-plus-square bi-middle me-2"></i>Add Product</button>
                                                     </div>
                                                 </div>
                                                 <table class="table mt-3" id="materialTable">
                                                     <thead>
                                                         <tr>
-                                                            <th>Material</th>
+                                                            <th>Product</th>
                                                             <th>Quantity</th>
                                                             <th>Unit Price</th>
                                                             <th>Tax (%)</th>
@@ -123,7 +135,7 @@
                                                         <tr>
                                                             <td>
                                                                 <select class="form-select" name="material[]" required>
-                                                                    <option value="" disabled selected>- Select Material -</option>
+                                                                    <option value="" disabled selected>- Select Product -</option>
                                                                 </select>
                                                             </td>
                                                             <td>
@@ -169,8 +181,8 @@
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-end mt-5">
-                                                <button type="submit" class="btn btn-primary me-1 mb-1">Save</button>
-                                                <a type="reset" class="btn btn-light-secondary me-1 mb-1" href="/../../../../erp-2/dist/pages/manufacturing/bom/list-bom.php">Cancel</a>
+                                                <button type="submit" class="btn btn-primary me-2 mb-1">Confirm</button>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/sales/quotations/list-quotation.php">Cancel</a>
                                             </div>
                                         </div>
                                     </form>
@@ -196,18 +208,18 @@
 
             // Fetch vendors
             $.ajax({
-                url: 'http://localhost:3000/app/api/v1/vendors',
+                url: 'http://localhost:3000/app/api/v1/costumers',
                 type: 'GET',
                 success: function(response) {
                     console.log("Vendors fetched:", response);
                     const vendorSelect = $('#vendorSelect');
                     response.data.forEach(function(vendor) {
-                        vendorSelect.append(new Option(`${vendor.id_vendor} - ${vendor.vendorname}`, vendor.id_vendor));
+                        vendorSelect.append(new Option(`${vendor.id_costumer} - ${vendor.costumername}`, vendor.id_costumer));
                     });
                 },
                 error: function(xhr, status, error) {
-                    console.error("Failed to fetch vendors:", error);
-                    alert('Failed to load vendors.');
+                    console.error("Failed to fetch Costumer:", error);
+                    alert('Failed to load Costumer.');
                 }
             });
 
@@ -215,12 +227,12 @@
             function fetchMaterials(materialSelect) {
                 console.log("Fetching materials...");
                 $.ajax({
-                    url: 'http://localhost:3000/app/api/v1/material/all',
+                    url: 'http://localhost:3000/app/api/v1/product/all',
                     type: 'GET',
                     success: function(response) {
                         console.log("Materials fetched:", response);
                         response.data.forEach(function(material) {
-                            materialSelect.append(new Option(`${material.id_material} - ${material.Materialname}`, material.id_material));
+                            materialSelect.append(new Option(`${material.id_product} - ${material.Productname}`, material.id_product));
                         });
                     },
                     error: function(xhr, status, error) {
@@ -294,64 +306,69 @@
 
                 console.log("Form submission started");
                 const id_vendor = $('#vendorSelect').val();
-                const order_date = $('#order-date-column').val();
+                const order_date = $('#order-date-column').val(); // Corrected ID for order date
+                const payment = $('#paymentSelect').val(); // Added payment field
                 const products = [];
 
                 $('#materialTabelBody tr').each(function() {
                     const row = $(this);
-                    const materialId = row.find('select[name="material[]"]').val();
-                    const materialName = row.find('select[name="material[]"] option:selected').text().split(' - ')[1]; // Get material name
+                    const productId = row.find('select[name="material[]"]').val();
+                    const productName = row.find('select[name="material[]"] option:selected').text().split(' - ')[1]; // Get material name
                     const quantity = row.find('input[name="quantity[]"]').val();
                     const unitPrice = row.find('input[name="unitPrice[]"]').val();
                     const subtotal = row.find('input[name="subtotal[]"]').val();
+                    const tax = row.find('input[name="tax[]"]').val(); // Tax value (assuming 11)
 
                     console.log("Row data:", {
-                        materialId,
-                        materialName,
+                        productId,
+                        productName,
                         quantity,
                         unitPrice,
-                        subtotal
+                        subtotal,
+                        tax
                     });
 
-                    if (materialId && quantity && unitPrice) {
+                    if (productId && quantity && unitPrice) {
                         products.push({
-                            id_product: materialId,
-                            productname: materialName, // Include material name
+                            id_product: productId,
+                            productname: productName, // Include material name
                             quantity: quantity,
                             unitprice: unitPrice,
-                            tax: "10%",
-                            Subtotal: subtotal
+                            tax: tax, // Ensure tax is passed correctly
+                            Subtotal: subtotal // Ensure subtotal is passed as a number
                         });
                     }
                 });
 
                 const postData = {
-                    id_vendor,
+                    id_costumer: id_vendor, // Change 'id_vendor' to 'id_costumer'
                     order_date,
+                    payment, // Added the payment field
                     products
                 };
 
                 console.log("Post data prepared:", postData);
 
                 $.ajax({
-                    url: 'http://localhost:3000/app/api/v1/rfq',
+                    url: 'http://localhost:3000/app/api/v1/quotation',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(postData),
                     success: function(response) {
                         console.log("Form submitted successfully:", response);
-                        alert('RFQ submitted successfully!');
-                        window.location.href = '../../purchasing/rfq/list-rfq.php';
+                        alert('Quo submitted successfully!');
+                        window.location.href = 'list-quotation.php';
                     },
                     error: function(xhr, status, error) {
                         console.error("Form submission failed:", {
                             status,
                             error
                         });
-                        alert('Failed to submit RFQ.');
+                        alert('Failed to submit Quo.');
                     }
                 });
             });
+
         });
     </script>
 

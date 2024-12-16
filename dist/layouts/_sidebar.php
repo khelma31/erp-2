@@ -54,6 +54,27 @@
                         <li class="submenu-item ">
                             <a href="/../../../erp-2/dist/pages/purchasing/rfq/list-rfq.php">Request for Quotation</a>
                         </li>
+                        <li class="submenu-item ">
+                            <a href="/../../../erp-2/dist/pages/purchasing/rfq/list-po.php">Purchase Order</a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="sidebar-item  has-sub">
+                    <a href="#" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Sales</span>
+                    </a>
+                    <ul class="submenu ">
+                        <li class="submenu-item ">
+                            <a href="/../../../erp-2/dist/pages/sales/customers/list-customer.php">Customers</a>
+                        </li>
+                        <li class="submenu-item ">
+                            <a href="/../../../erp-2/dist/pages/sales/quotations/list-quotation.php">Quotations</a>
+                        </li>
+                        <li class="submenu-item ">
+                            <a href="/../../../erp-2/dist/pages/sales/quotations/list-sales-order.php">Sales Order</a>
+                        </li>
                     </ul>
                 </li>
             </ul>

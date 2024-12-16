@@ -107,8 +107,8 @@
                                 </td>
                                 <td>${bom.productpreference}</td>
                                 <td>
-                                    <a type="button" class="btn btn-outline-secondary btn-sm me-1" href='overview-bom.php?id=${bom.id_bom}'>
-                                        <i class="bi bi-file-earmark-easel bi-middle"></i>
+                                    <a type="button" class="btn btn-outline-dark btn-sm me-1" href='overview-bom.php?id=${bom.id_bom}'>
+                                        <i class="bi bi-zoom-in bi-middle"></i>
                                     </a>
                                     <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-bom.php?id=${bom.id_bom}'>
                                         <i class="bi bi-pencil-square bi-middle"></i>

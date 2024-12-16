@@ -93,7 +93,7 @@
                                         </div>
                                         <div class="col-12 d-flex justify-content-end">
                                             <div class="col-12 d-flex justify-content-end mt-3">
-                                                <a class="btn btn-outline-danger mb-1" href="../../../../dist/pages/Manufacturing/Bahan/list-bahan.php">Cancel</a>
+                                                <a class="btn btn-outline-danger mb-1" href="../../../../dist/pages/manufacturing/bom/list-bom.php">Cancel</a>
                                             </div>
                                         </div>
                                     </form>

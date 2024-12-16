@@ -34,13 +34,13 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>List Manufacturing Order</h3>
+                            <h3>List Quotations</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
                                 <ol class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="/../../../../../erp-2/dist/pages/index.php">Dashboard</a></li>
-                                    <li class="breadcrumb-item active" aria-current="page">List Manufacturing Order</li>
+                                    <li class="breadcrumb-item active" aria-current="page">List Quotations</li>
                                 </ol>
                             </nav>
                         </div>
@@ -52,9 +52,13 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col d-flex justify-content-end">
-                                    <a type="button" class="btn btn-outline-primary btn-sm" href='tambah-mo.php'>
-                                        <i class="bi bi-plus-square bi-middle me-2"></i>
+                                    <a type="button" class="btn btn-outline-primary btn-sm me-2" href='tambah-quotation.php'>
+                                        <i class="bi bi-plus-square bi-middle me-1"></i>
                                         Add
+                                    </a>
+                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
+                                        Export as PDF
                                     </a>
                                 </div>
                             </div>
@@ -63,88 +67,85 @@
                             <table class="table table-striped" id="table1">
                                 <thead>
                                     <tr>
-                                        <th>ID MO</th>
-                                        <th>Product ID</th>
-                                        <th>BOM ID</th>
+                                        <th>Reference</th>
+                                        <th>Costumer</th>
+                                        <th>Order Date</th>
                                         <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="mo-list">
-                                    <!-- Data akan diisi oleh JavaScript -->
+                                <tbody id="vendorTableBody">
+                                    <!-- Data will be inserted here dynamically -->
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </section>
-
             </div>
         </div>
     </div>
+
     <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
+
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Fetch data from the API and populate the table
-        async function fetchManufacturingOrders() {
-            try {
-                const response = await fetch('http://localhost:3000/app/api/v1/mo/all');
-                const data = await response.json();
+        // Fetch vendor data from API and populate the table
+        axios.get('http://localhost:3000/app/api/v1/quotation/all/quo')
+            .then(response => {
+                const vendors = response.data.data;
+                const tableBody = document.getElementById('vendorTableBody');
 
-                if (data.meta.code === 200 && Array.isArray(data.data)) {
-                    const tableBody = document.getElementById('mo-list');
-                    tableBody.innerHTML = ''; // Clear existing rows
+                vendors.forEach(vendor => {
 
-                    data.data.forEach(order => {
-                        const row = document.createElement('tr');
+                    // Format the date to a more user-friendly format
+                    const formattedDate = new Date(vendor.order_date).toLocaleDateString();
+                    const row = `
+                    <tr>
+                        <td>${vendor.id_quotation}</td>
+                        <td>${vendor.id_costumer}</td>
+                        <td>${formattedDate}</td>
+                        <td>${vendor.status}</td>
+                        <td>
+                            <a type="button" class="btn btn-outline-success btn-sm me-1" href='sales-order.php?id=${vendor.id_quotation}'>
+                                <i class="bi bi-pencil-square bi-middle"></i>
+                            </a>
+                            <a type="button" class="btn btn-outline-danger btn-sm" onclick="deleteVendor('${vendor.id_quotation}')">
+                                <i class="bi bi-trash-fill bi-middle"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
 
-                        row.innerHTML = `
-                            <td>${order.id_mo || ''}</td>
-                            <td>${order.id_product || ''}</td>
-                            <td>${order.id_bom || ''}</td>
-                            <td>${order.status || ''}</td>
-                            <td>
-                                <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-mo.php?id=${order.id_mo}'>
-                                    <i class="bi bi-pencil-square bi-middle"></i>
-                                </a>
-                                <a type="button" class="btn btn-outline-danger btn-sm me-1" onclick="deleteMo('${order.id_mo}')">
-                                    <i class="bi bi-trash-fill bi-middle"></i>
-                                </a>
-                            </td>
-                        `;
+                // Initialize the DataTable after the table has been populated
+                let table1 = document.querySelector('#table1');
+                let dataTable = new simpleDatatables.DataTable(table1);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the vendors!', error);
+            });
 
-                        tableBody.appendChild(row);
-                    });
-
-                    // Initialize or refresh the datatable after populating the table
-                    let table1 = document.querySelector('#table1');
-                    new simpleDatatables.DataTable(table1);
-                }
-            } catch (error) {
-                console.error('Error fetching manufacturing orders:', error);
-            }
-        }
-
-        // Call the function to fetch and display data on page load
-        document.addEventListener('DOMContentLoaded', fetchManufacturingOrders);
-
-
-        function deleteMo(MoId) {
-            if (confirm('Are you sure you want to delete this MO?')) {
-                axios.delete(`http://localhost:3000/app/api/v1/mo/${MoId}`)
+        // Function to delete a vendor
+        function deleteVendor(id) {
+            if (confirm(`Are you sure you want to delete Quotation with ID ${id}?`)) {
+                axios.delete(`http://localhost:3000/app/api/v1/quotation/${id}`)
                     .then(response => {
-                        alert('MO deleted successfully!'); // Konfirmasi penghapusan berhasil
-                        fetchManufacturingOrders(); // Segarkan data setelah penghapusan
+                        alert('Quotation deleted successfully!');
+                        // Reload the page to refresh the table after deletion
+                        location.reload();
                     })
                     .catch(error => {
-                        console.error('There was an error deleting the MO!', error);
-                        alert('Failed to delete the MO.'); // Konfirmasi penghapusan gagal
+                        console.error('There was an error deleting the Quotation!', error);
+                        alert('Error deleting Quotation.');
                     });
             }
         }
     </script>
+
     <script src="../../../assets/js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
 
 </html>
