@@ -86,6 +86,7 @@
                                         <th>Product Name</th>
                                         <th>Product Category</th>
                                         <th>Image</th>
+                                        <th>Quantity</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -127,6 +128,7 @@
                                 <td>${product.Productname}</td>
                                 <td>${product.Productcategory}</td>
                                 <td><img src="${imageUrl}" alt="${product.Productname}" style="width: 100px; height: auto;"></td>
+                                  <td>${product.Qty}</td>
                                 <td>
                                     <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-produk.php?id=${product.id_product}'>
                                         <i class="bi bi-pencil-square bi-middle"></i>

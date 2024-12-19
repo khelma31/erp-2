@@ -14,16 +14,16 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active ">
+                <li class="sidebar-item">
                     <a href="/../../../erp-2/dist/pages/index.php" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
+                        <i class="bi bi-grid"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
+                        <i class="bi bi-box"></i>
                         <span>Manufacture</span>
                     </a>
                     <ul class="submenu ">
@@ -44,7 +44,7 @@
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
+                        <i class="bi bi-cart"></i>
                         <span>Purchase</span>
                     </a>
                     <ul class="submenu ">
@@ -62,7 +62,7 @@
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
+                        <i class="bi bi-cash"></i>
                         <span>Sales</span>
                     </a>
                     <ul class="submenu ">
@@ -76,6 +76,13 @@
                             <a href="/../../../erp-2/dist/pages/sales/quotations/list-sales-order.php">Sales Order</a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="sidebar-item">
+                    <a href="../pages/auth-login.php" class='sidebar-link'>
+                        <i class="bi bi-person"></i>
+                        <span>Log Out</span>
+                    </a>
                 </li>
             </ul>
         </div>

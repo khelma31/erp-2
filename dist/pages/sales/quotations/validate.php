@@ -310,12 +310,12 @@
                             const newRow = `
                     <tr>
                         <td>
-                            <select class="form-select" name="product[]" required>
+                            <select class="form-select" name="product[]" disabled>
                                 <option value="${product.product_id}" selected>${product.product_id}</option>
                             </select>
                         </td>
-                        <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" required></td>
-                        <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" required></td>
+                        <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" disabled></td>
+                        <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" disabled></td>
                         <td><input type="number" name="tax[]" class="form-control" value="11" disabled></td>
                         <td><input type="number" name="subtotal[]" class="form-control" value="${product.subtotal}" disabled></td>
                         <td>

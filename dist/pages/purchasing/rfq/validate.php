@@ -63,6 +63,7 @@
                                                     <button type="button" id="poButton" class="btn btn-primary" disabled>Purchase Order</button>
                                                     <button type="button" id="RecivedButton" class="btn btn-primary" disabled>Recived</button>
                                                     <button type="button" id="BilledButton" class="btn btn-primary" disabled>Billed</button>
+                                                    <button type="button" id="DoneButton" class="btn btn-primary" disabled>Done</button>
                                                 </div>
 
                                             </div>
@@ -186,110 +187,6 @@
 
                                         </div>
                                     </form>
-
-                                    <!-- <form class="form">
-                                        <div class="row p-3">
-                                            <div class="page-title">
-                                                <div class="row">
-                                                    <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                                                        <h5>Input Material</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <div class="row">
-                                                    <div class="col-md-12 col-12 d-flex justify-content-end">
-                                                        <button type="button" class="btn btn-outline-primary btn-sm" id="addMaterialButton">
-                                                            <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
-                                                    </div>
-                                                </div>
-                                                <table class="table mt-3" id="materialTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product</th>
-                                                            <th>Quantity</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Tax</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="materialTabelBody">
-                                                        <tr>
-                                                            <td>
-                                                                <select class="form-select" name="product[]" required>
-                                                                    <option value="" disabled selected>- Select Product -</option>
-                                                                    <option value="Steel">Option 1</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="quantity[]" class="form-control" placeholder="0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="tax[]" class="form-control" placeholder="10%" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                                                                    <i class="bi bi-trash bi-middle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <div id="materialForm" style="display: none;">
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialProduct">Product</label>
-                                                                <input type="text" class="form-control" id="materialProduct">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialQuantity">Quantity</label>
-                                                                <input type="text" class="form-control" id="materialQuantity">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialUnit">Unit Price</label>
-                                                                <input type="text" class="form-control" id="materialPrice">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialTax">Tax</label>
-                                                                <input type="number" class="form-control" id="materialTax">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialSubtotal">Subtotal</label>
-                                                                <input type="number" class="form-control" id="materialSubtotal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary" id="submitBahanButton">Tambahkan Bahan</button>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-12 d-flex justify-content-end mt-5">
-                                                <button type="button"
-                                                    class="btn btn-primary me-2 mb-1" id="saveButton" data-status="RFQ">Confirm Order</button>
-                                                <a type="reset"
-                                                    class="btn btn-light-secondary mb-1" href="list-rfq.php">Cancel</a>
-                                            </div>
-
-                                        </div>
-                                    </form> -->
-
                                 </div>
                             </div>
                         </div>
@@ -372,6 +269,11 @@
                             $('#poButton').removeAttr('disabled');
                             $('#BilledButton').attr('disabled', 'disabled');
                             $('#RecivedButton').attr('disabled', 'disabled');
+                        } else if (rfqData.status === 'Done') {
+                            // Jika status PO, aktifkan tombol PO
+                            $('#DoneButton').removeAttr('disabled');
+                            $('#BilledButton').attr('disabled', 'disabled');
+                            $('#RecivedButton').attr('disabled', 'disabled');
                         }
                         // Pastikan rfqData memiliki vendor_id
                         if (rfqData && rfqData.vendor_id) {
@@ -391,12 +293,12 @@
                             const newRow = `
         <tr>
             <td>
-                <select class="form-select" name="product[]" required>
+                <select class="form-select" name="product[]" disabled>
                     <option value="${product.product_id}" selected>${product.product_id}</option>
                 </select>
             </td>
-            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" required></td>
-            <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" required></td>
+            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" disabled></td>
+            <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" disabled></td>
             <td><input type="number" name="tax[]" class="form-control" value="11" disabled></td>
             <td><input type="number" name="subtotal[]" class="form-control" value="${product.subtotal}" disabled></td>
             <td>

@@ -85,7 +85,7 @@
                                                         <select class="form-select" id="category">
                                                             <option value="" disabled selected>- Choose Category -</option>
                                                             <option>Minyak Esensial</option>
-                                                            <!-- Add more categories as needed -->
+                                                            <option>Cairan</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -94,24 +94,16 @@
                                                 <div class="col-md-3 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label class="mb-2">Is this product a variant?</label>
-                                                        <!-- <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
-                                                            <label class="form-check-label" for="variantYes">Yes</label>
-                                                        </div>
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
-                                                            <label class="form-check-label" for="variantNo">No</label>
-                                                        </div> -->
                                                     </div>
                                                     <div class="form-group">
-                                                        
-                                                            <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
-                                                            <label class="form-check-label" for="variantYes">Yes</label>
-                                                        
-                                                        
-                                                            <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
-                                                            <label class="form-check-label" for="variantNo">No</label>
-                                                        
+
+                                                        <input class="form-check-input" type="radio" name="variant" id="variantYes" value="yes">
+                                                        <label class="form-check-label" for="variantYes">Yes</label>
+
+
+                                                        <input class="form-check-input" type="radio" name="variant" id="variantNo" value="no">
+                                                        <label class="form-check-label" for="variantNo">No</label>
+
                                                     </div>
                                                 </div>
 
@@ -231,31 +223,50 @@
             }
         });
 
-        // Handle form submission
         document.getElementById('editProductForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(this);
 
-            axios.put(`http://localhost:3000/app/api/v1/product/${productId}`, formData, {
+            // Create a FormData object
+            const formData = new FormData();
+
+            // Append form fields to FormData with correct keys
+            formData.append('productname', document.getElementById('name').value);
+            formData.append('productcategory', document.getElementById('category').value);
+            formData.append('sellprice', document.getElementById('sellPrice').value);
+            formData.append('makeprice', document.getElementById('cost').value);
+
+            // Send the fixed tax value (if it should always be 11%)
+            formData.append('pajak', '11');
+
+            formData.append('description', document.getElementById('description').value);
+
+            // Handle variant radio buttons
+            const variant = document.querySelector('input[name="variant"]:checked') ?
+                document.querySelector('input[name="variant"]:checked').value : '';
+            formData.append('Variant', variant);
+
+            // Make the PUT request using Axios
+            axios.put(`http://localhost:3000/app/api/v1/products/${productId}`, formData, {
                     headers: {
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'multipart/form-data' // Ensure this header is set
                     }
                 })
                 .then(response => {
                     alert('Product updated successfully!');
-                    window.location.href = '../../dist/pages/list-produk.php';
+                    window.location.href = 'list-produk.php';
                 })
                 .catch(error => {
-                    console.error('There was an error updating the product!', error);
+                    console.error('Error updating product:', error.response ? error.response.data : error.message);
                 });
         });
+
+
 
         document.getElementById('printButtonBarcode').addEventListener('click', function() {
             if (!productId) {
                 alert('Product ID is not defined.');
                 return;
             }
-
             axios({
                     url: `http://localhost:3000/app/api/v1/product/${productId}/barcode`,
                     method: 'GET',

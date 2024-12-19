@@ -74,6 +74,7 @@
                                         <th>Material Name</th>
                                         <th>Material Category</th>
                                         <th>Sell Price</th>
+                                        <th>Quantity</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -105,6 +106,7 @@
                             <td>${product.Materialname}</td>
                             <td>${product.Materialcategory}</td>
                             <td>${product.Sellprice}</td>
+                            <td>${product.Qty}</td>
                             <td>
                                 <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-bahan.php?id=${product.id_material}'>
                                     <i class="bi bi-pencil-square bi-middle"></i>

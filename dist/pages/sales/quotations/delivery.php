@@ -126,7 +126,7 @@
 
                                             <div class="col-12 d-flex justify-content-end mt-4">
                                                 <button type="button" class="btn btn-primary me-2 mb-1" id="saveButton" data-status="draft">Check Availability</button>
-                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/sales/quotations/list-quotation.php">Cancel</a>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="list-sakes-order.php">Back</a>
                                             </div>
                                         </div>
                                 </div>
@@ -211,13 +211,42 @@
                     type: 'GET',
                     success: function(response) {
                         console.log("Quotation data fetched:", response);
-
                         const quotationData = response.data_bom;
-                        // Fill customer ID in vendor select dropdown
-                        $('#vendorSelect').val(quotationData.costumer_id);
 
-                        // Fill order date
-                        $('#order-date-column').val(quotationData.order_date.split("T")[0]);
+                        if (!quotationData || !quotationData.products) {
+                            console.error("Invalid quotation data:", quotationData);
+                            alert('Invalid quotation data received.');
+                            return;
+                        }
+
+                        console.log("Unknown status:", quotationData.status);
+                        // Handle RFQ status and update button states
+                        if (quotationData.status === 'Delivery') {
+                            $('#draftButton').removeAttr('disabled');
+                            $('#doneButton').attr('disabled', 'disabled');
+                        } else if (quotationData.status === 'Done') {
+                            $('#doneButton').prop('disabled', false).removeClass('disabled');
+                            $('#draftButton').attr('disabled', 'disabled');
+                            $('#saveButton').remove();
+
+                            // Update the 'done' column with demand quantities
+                            $('#materialTabelBody tr').each(function() {
+                                const demandQty = $(this).find('input[name="quantity[]"]').val(); // Ambil nilai demand
+                                $(this).find('input[name="done[]"]').prop('disabled', false); // Aktifkan kolom 'done'
+                                $(this).find('input[name="done[]"]').val(demandQty); // Isi kolom 'done' dengan nilai demand
+                            });
+
+                        } else {
+                            console.log("Unknown status:", quotationData.status);
+                        }
+
+
+                        // Ensure customer ID is selected in vendor select dropdown
+                        $('#vendorSelect').val(quotationData.costumer_id || '');
+
+                        // Update order date
+                        const orderDate = quotationData.order_date ? quotationData.order_date.split("T")[0] : '';
+                        $('#order-date-column').val(orderDate);
 
                         // Populate the product table
                         const tableBody = $('#materialTabelBody');
@@ -225,34 +254,42 @@
 
                         quotationData.products.forEach(product => {
                             const availableQty = materialQuantities[product.product_name] || 0; // Get available quantity
-                            const reservedQty = availableQty - product.quantity; // Calculate reserved quantity (remaining stock)
+                            const demandQty = product.quantity || 0; // Get demand quantity
+                            const doneQty = quotationData.status === 'Done' ? demandQty : 0; // If status is 'Done', set 'done' to demandQty
+
                             const newRow = `
-                        <tr>
-                            <td>
-                                <select class="form-select" name="product[]" required>
-                                    <option value="${product.product_id}" selected>${product.product_name}</option>
-                                </select>
-                            </td>
-                            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" required></td>
-                            <td><input type="number" name="unitPrice[]" class="form-control" value="${availableQty}" required></td>
-                            <td><input type="number" name="tax[]" class="form-control" value="0" disabled></td>
-                            <td>
-                                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                                    <i class="bi bi-trash bi-middle"></i>
-                                </button>
-                            </td>
-                        </tr>`;
-                            tableBody.append(newRow); // Append the new row to the table
+        <tr>
+            <td>
+                <select class="form-select" name="product[]" disabled>
+                    <option value="${product.product_id}" selected>${product.product_name}</option>
+                </select>
+            </td>
+            <td><input type="number" name="quantity[]" class="form-control" value="${demandQty}" disabled></td>
+            <td><input type="number" name="unitPrice[]" class="form-control" value="${availableQty}" disabled></td>
+            <td><input type="number" name="done[]" class="form-control" value="${doneQty}" disabled></td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton" disabled>
+                    <i class="bi bi-trash bi-middle"></i>
+                </button>
+            </td>
+        </tr>`;
+                            tableBody.append(newRow); // Append the row to the table
                         });
 
-                        // Calculate total cost after loading data
+                        // Calculate the total cost after data is loaded
                         calculateTotal();
 
-                        // Update status if available
+                        // Update status text
                         if (quotationData.status === 'Delivery') {
-                            $('#statusText').text('Delivery').addClass('fs-1 text-warning fw-bold');
-                        } else {
-                            $('#statusText').text('Paid').addClass('fs-1 text-success fw-bold');
+                            $('#statusText')
+                                .text('Delivery')
+                                .removeClass('text-success')
+                                .addClass('fs-1 text-warning fw-bold');
+                        } else if (quotationData.status === 'Paid') {
+                            $('#statusText')
+                                .text('Paid')
+                                .removeClass('text-warning')
+                                .addClass('fs-1 text-success fw-bold');
                         }
 
                         console.log("Form updated with quotation data.");
@@ -263,6 +300,8 @@
                     }
                 });
             }
+
+
 
             // Fetch material quantities and then load quotation data
             fetchMaterialQuantities(loadQuotationData);
@@ -278,12 +317,12 @@
                 const newRow = `
             <tr>
                 <td>
-                    <select class="form-select" name="product[]" required>
+                    <select class="form-select" name="product[]" disabled>
                         <option value="" disabled selected>- Select Product -</option> 
                     </select>
                 </td>
-                <td><input type="number" name="quantity[]" class="form-control" placeholder="0" required></td>
-                <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required></td>
+                <td><input type="number" name="quantity[]" class="form-control" placeholder="0" disabled></td>
+                <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" disabled></td>
                 <td><input type="number" name="tax[]" class="form-control" placeholder="11%" disabled></td>
                 <td><input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled></td>
                 <td><input type="number" name="reserved[]" class="form-control" placeholder="Reserved" disabled></td> <!-- Reserved column -->
@@ -307,12 +346,12 @@
                 const newRow = `
                 <tr>
                     <td>
-                        <select class="form-select" name="product[]" required>
+                        <select class="form-select" name="product[]" disabled>
                             <option value="" disabled selected>- Select Product -</option> 
                         </select>
                     </td>
-                    <td><input type="number" name="quantity[]" class="form-control" placeholder="0" required></td>
-                    <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required></td>
+                    <td><input type="number" name="quantity[]" class="form-control" placeholder="0" disabled></td>
+                    <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" disabled></td>
                     <td><input type="number" name="tax[]" class="form-control" placeholder="11%" disabled></td>
                     <td><input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled></td>
                     <td>
@@ -376,16 +415,58 @@
                                 success: function(response) {
                                     if (response.meta.code === 200) {
                                         alert("Status berhasil diperbarui ke Delivered.");
+
                                         // Update UI setelah status diperbarui
-                                        $('#doneButton').prop('disabled', false).addClass('highlighted');
+                                        $('#doneButton').prop('disabled', false).removeClass('disabled');
                                         $('#checkButton').prop('disabled', true).removeClass('highlighted');
                                         $('#statusMessage').text('RFQ sudah dikonfirmasi!').addClass('fs-1 text-success fw-bold');
+
+                                        // **Tambahkan logika untuk mengurangi stok**
+                                        decreaseProductStock();
+
+                                        // **Isi kolom 'done' dengan nilai dari demand**
+                                        $('#materialTabelBody tr').each(function() {
+                                            const demandQty = $(this).find('input[name="quantity[]"]').val(); // Ambil nilai demand
+                                            $(this).find('input[name="done[]"]').val(demandQty); // Isi kolom 'done' dengan nilai demand
+                                        });
+
+                                        // Hilangkan tombol Deliver setelah klik kedua
+                                        $('#saveButton').remove();
                                     }
                                 },
                                 error: function(xhr, status, error) {
                                     console.error("Gagal memperbarui status. Error:", error);
-                                    alert("Gagal mengubah status RFQ. Silakan coba lagi.");
+                                    alert("Gagal mengubah status Quo. Silakan coba lagi.");
                                 }
+                            });
+                        }
+
+
+                        function decreaseProductStock() {
+                            $('#materialTabelBody tr').each(function() {
+                                const productId = $(this).find('select[name="product[]"]').val(); // Ambil ProductId
+                                const qty = parseFloat($(this).find('input[name="quantity[]"]').val()) || 0; // Ambil Qty
+
+                                // Kirim permintaan ke API untuk mengurangi stok
+                                $.ajax({
+                                    url: 'http://localhost:3000/app/api/v1/product/decrease',
+                                    method: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        ProductId: productId,
+                                        Qty: qty
+                                    }),
+                                    success: function(response) {
+                                        if (response.meta.code === 200) {
+                                            console.log(`Stok untuk ProductId ${productId} berhasil dikurangi sebesar ${qty}.`);
+                                        } else {
+                                            console.error(`Gagal mengurangi stok untuk ProductId ${productId}.`);
+                                        }
+                                    },
+                                    error: function(xhr, status, error) {
+                                        console.error(`Gagal mengurangi stok untuk ProductId ${productId}. Error:`, error);
+                                    }
+                                });
                             });
                         }
                     }
@@ -432,6 +513,8 @@
                     }
                 });
             });
+
+
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>

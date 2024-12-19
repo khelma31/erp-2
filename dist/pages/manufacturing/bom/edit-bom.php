@@ -195,7 +195,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <input type="number" name="quantity[]" class="form-control" value="${material.quantity}" required>
+                                    <input type="text" name="quantity[]" class="form-control" value="${material.quantity}" required>
                                 </td>
                                 <td>
                                     <input type="text" name="unit[]" class="form-control" value="${material.unit}" required>
@@ -307,16 +307,16 @@
                     materials: materials
                 };
 
-                // Send form data to API
+                console.log(formData); // Debugging: Cek data yang dikirim
                 $.ajax({
-                    url: `http://localhost:3000/app/api/v1/bom/edit/${bomId}`, // Replace with your API endpoint
-                    method: 'PUT', // Use PUT for updating
+                    url: `http://localhost:3000/app/api/v1/bom/edit/${bomId}`,
+                    method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify(formData),
                     success: function(response) {
                         if (response.meta.code === 200) {
                             alert("BOM updated successfully!");
-                            window.location.href = '../../dist/pages/list-bom.php'; // Redirect to list page
+                            window.location.href = 'list-bom.php';
                         } else {
                             alert("Error updating BOM: " + response.meta.message);
                         }

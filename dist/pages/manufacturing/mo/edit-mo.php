@@ -348,20 +348,45 @@
                     // Memanggil fungsi checkAvailability setelah tombol Check Availability diklik
                     checkMaterialAvailability();
 
+                    // function checkMaterialAvailability() {
+                    //     let allMaterialsAvailable = true; // Pastikan ini diset ulang
+                    //     $('#materialTabelBody tr').each(function() {
+                    //         const reserved = parseFloat($(this).find('input[name="reserved[]"]').val());
+                    //         const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
+
+                    //         if (reserved < consumed) {
+                    //             $(this).find('input[name="consumed[]"]').addClass('bg-danger').removeClass('bg-success');
+                    //             allMaterialsAvailable = false;
+                    //         } else {
+                    //             $(this).find('input[name="consumed[]"]').addClass('bg-success').removeClass('bg-danger');
+                    //         }
+                    //     });
+                    // }
+
                     function checkMaterialAvailability() {
-                        let allMaterialsAvailable = true; // Pastikan ini diset ulang
+                        let allMaterialsAvailable = true; // Ensure this is reset
                         $('#materialTabelBody tr').each(function() {
                             const reserved = parseFloat($(this).find('input[name="reserved[]"]').val());
                             const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
 
+                            // Check if reserved is less than consumed
                             if (reserved < consumed) {
-                                $(this).find('input[name="consumed[]"]').addClass('bg-danger').removeClass('bg-success');
+                                // Change the text color to red and background to light red
+                                $(this).find('input[name="consumed[]"]').css({
+                                    'color': 'red', // Text color red
+                                    'background-color': '#f8d7da' // Light red background
+                                });
                                 allMaterialsAvailable = false;
                             } else {
-                                $(this).find('input[name="consumed[]"]').addClass('bg-success').removeClass('bg-danger');
+                                // Change the text color to green and background to light green
+                                $(this).find('input[name="consumed[]"]').css({
+                                    'color': 'green', // Text color green
+                                    'background-color': '#d4edda' // Light green background
+                                });
                             }
                         });
                     }
+
 
                     // Lanjutkan dengan proses lainnya jika semua bahan tersedia
                     if (allMaterialsAvailable) {
@@ -374,8 +399,17 @@
                     }
                 } else if ($(this).text() === 'Produce') {
                     if (allMaterialsAvailable) {
-                        if (confirm("Are you sure you want to reduce materials?")) {
-                            console.log("Confirmation received, reducing materials...");
+                        if (confirm("Are you sure you want to reduce materials and increase product?")) {
+                            console.log("Confirmation received, reducing materials and increasing product...");
+
+                            // Fetch the ProductId and Qty from the form
+                            const productId = $('#productSelect').val(); // Get selected product ID
+                            const quantityToProduce = parseFloat($('#quantityToProduce').val()); // Get quantity to produce
+
+                            if (!productId || isNaN(quantityToProduce) || quantityToProduce <= 0) {
+                                alert("Please select a product and enter a valid quantity to produce.");
+                                return; // Exit if product or quantity is invalid
+                            }
 
                             // Loop through the rows and add materials to the reduction list
                             $('#materialTabelBody tr').each(function() {
@@ -402,6 +436,7 @@
                                 // Disable Check Availability button (if it exists)
                                 $('#checkAvailabilityButton').prop('disabled', true);
 
+                                // First, reduce the materials
                                 Promise.all(
                                         materialsToReduce.map(material => {
                                             console.log(`Reducing material with Name ${material.MaterialName}, Qty: ${material.Qty}`);
@@ -428,7 +463,41 @@
                                         })
                                     )
                                     .then(() => {
-                                        // After materials are reduced, call for confirmation
+                                        // After materials are reduced, increase the product
+                                        const productIncreaseData = {
+                                            ProductId: productId, // Dynamic ProductId from the dropdown
+                                            Qty: quantityToProduce // Dynamic quantity to produce
+                                        };
+
+                                        console.log("Sending request to increase product with data:", productIncreaseData); // Log the data being sent
+
+                                        return fetch('http://localhost:3000/app/api/v1/product/increase', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json'
+                                                },
+                                                body: JSON.stringify(productIncreaseData)
+                                            })
+                                            .then(response => {
+                                                console.log("Response status:", response.status); // Log the response status
+                                                return response.json(); // Return the JSON data
+                                            })
+                                            .then(data => {
+                                                console.log("Response data received:", data); // Log the response data
+
+                                                if (data.success) {
+                                                    console.log(`Product increased successfully by ${productIncreaseData.Qty}`);
+                                                } else {
+                                                    console.error(`Failed to increase product. Response:`, data);
+                                                }
+                                            })
+                                            .catch(error => {
+                                                console.error('Error during product increase:', error);
+                                            });
+                                    })
+
+                                    .then(() => {
+                                        // After materials are reduced and product is increased, confirm the production
                                         $.ajax({
                                             url: 'http://localhost:3000/app/api/v1/mo/status/confirm',
                                             method: 'POST',
@@ -438,7 +507,7 @@
                                             }),
                                             success: function(response) {
                                                 if (response.meta.code === 200) {
-                                                    // Update status tombol di sini
+                                                    // Update status buttons here
                                                     $('#saveButton').text('Produce');
                                                     $('#produceButton').removeClass('disabled').addClass('highlighted');
                                                     $('#availabilityButton').removeClass('highlighted').addClass('disabled');

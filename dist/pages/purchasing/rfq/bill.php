@@ -39,7 +39,7 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                            <h3>Add Bill</h3>
+                            <h3>Bill</h3>
                         </div>
                         <div class="col-12 col-md-6 order-md-2 order-first">
                             <nav aria-label="breadcrumb" class="breadcrumb-header float-start float-lg-end">
@@ -142,9 +142,8 @@
 
                                             <div class="col-12 d-flex justify-content-end mt-5">
                                                 <button type="submit" class="btn btn-primary me-1 mb-1" id="saveButton">Confirm</button>
-                                                <a type="reset" class="btn btn-light-secondary mb-1" href="list-rfq.php" id="cancelButton">Cancel</a>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="list-po.php" id="cancelButton">Back</a>
                                             </div>
-
                                         </div>
                                     </form>
 
@@ -241,12 +240,12 @@
                             const newRow = `
         <tr>
             <td>
-                <select class="form-select" name="product[]" required>
+                <select class="form-select" name="product[]" disabled>
                     <option value="${product.product_id}" selected>${product.product_id}</option>
                 </select>
             </td>
-            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" required></td>
-            <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" required></td>
+            <td><input type="number" name="quantity[]" class="form-control" value="${product.quantity}" disabled></td>
+            <td><input type="number" name="unitPrice[]" class="form-control" value="${product.unit_price}" disabled></td>
             <td><input type="number" name="tax[]" class="form-control" value="11" disabled></td>
             <td><input type="number" name="subtotal[]" class="form-control" value="${product.subtotal}" disabled></td>
             <td>
@@ -284,12 +283,12 @@
                 const newRow = `
                 <tr>
                     <td>
-                        <select class="form-select" name="Material[]" required>
+                        <select class="form-select" name="Material[]" disable>
                             <option value="" disabled selected>- Select Material -</option> 
                         </select>
                     </td>
-                    <td><input type="number" name="quantity[]" class="form-control" placeholder="0" required></td>
-                    <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required></td>
+                    <td><input type="number" name="quantity[]" class="form-control" placeholder="0" disable></td>
+                    <td><input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" disable></td>
                     <td><input type="number" name="tax[]" class="form-control" placeholder="11%" disabled></td>
                     <td><input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled></td>
                     <td>
@@ -308,14 +307,14 @@
             });
 
             $('#saveButton').click(function() {
-                    if (confirm("Apakah Anda yakin ingin mengonfirmasi Bill ini?")) {
-                        const materials = [];
-                        const RfqId = new URLSearchParams(window.location.search).get('id');
+                if (confirm("Apakah Anda yakin ingin mengonfirmasi Bill ini?")) {
+                    const materials = [];
+                    const RfqId = new URLSearchParams(window.location.search).get('id');
 
-                        $('#materialTabelBody tr').each(function() {
-                            const productId = $(this).find('select[name="product[]"]').val();
-                            const quantity = $(this).find('input[name="quantity[]"]').val();
-                            console.log("Material ID:", productId, "Quantity:", quantity);
+                    $('#materialTabelBody tr').each(function() {
+                        const productId = $(this).find('select[name="product[]"]').val();
+                        const quantity = $(this).find('input[name="quantity[]"]').val();
+                        console.log("Material ID:", productId, "Quantity:", quantity);
 
 
                         // Validasi data sebelum push
@@ -332,111 +331,133 @@
                         }
                     });
 
-                console.log("Materials to update:", materials);
+                    console.log("Materials to update:", materials);
+                    // Panggil API untuk setiap material
+                    materials.forEach((material) => {
+                        $.ajax({
+                            url: 'http://localhost:3000/app/api/v1/material/increasemat',
+                            method: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify(material),
+                            success: function(materialResponse) {
+                                if (materialResponse.meta.code === 200) {
+                                    console.log(
+                                        `Material ${material.MaterialName} berhasil diperbarui.`,
+                                        materialResponse
+                                    );
 
-                // Panggil API untuk mengupdate status RFQ
+                                    $('#materialStatusMessage').append(
+                                        `<p>Material ${material.MaterialName} berhasil ditambahkan ${material.Qty}!</p>`
+                                    );
+                                } else {
+                                    console.error(
+                                        `Gagal memperbarui material ${material.MaterialName}.`,
+                                        materialResponse
+                                    );
+                                }
+                            },
+                            error: function(error) {
+                                console.error(
+                                    `Error saat memperbarui material ${material.MaterialName}:`,
+                                    error
+                                );
+                                alert(`Gagal menambah material ${material.MaterialName}. Silakan coba lagi.`);
+                            },
+                        });
+                    });
+                    // Panggil API untuk mengupdate status RFQ
+                    $.ajax({
+                        url: 'http://localhost:3000/app/api/v1/rfq/status',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            id_rfq: RfqId
+                        }),
+                        success: function(response) {
+                            if (response.meta.code === 200) {
+                                alert("Bill berhasil dikonfirmasi!");
+
+                                // Update status tombol
+                                $('#doneButton').prop('disabled', false).addClass('highlighted');
+                                $('#draftButton').prop('disabled', true).removeClass('highlighted');
+
+                                // Update UI
+                                $('#statusMessage').text('Bill sudah dikonfirmasi!');
+
+
+                            }
+                        },
+                        error: function(error) {
+                            console.error("Gagal mengonfirmasi Bill:", error);
+                            alert("Gagal mengonfirmasi Bill. Silakan coba lagi.");
+                        },
+                    });
+                }
+            });
+
+
+
+
+            // Event listener untuk tombol kirim email
+            $('#sendEmailButton').click(function() {
+                console.log("Send Email button clicked!");
+
+                // Ambil parameter RFQ ID dari URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const rfqId = urlParams.get('id');
+                console.log("Extracted RFQ ID:", rfqId);
+
+                // Ambil vendor ID dari dropdown
+                const vendorId = $('#vendorSelect').val();
+                console.log("Selected Vendor ID:", vendorId);
+
+                // Validasi input
+                if (!vendorId || !rfqId) {
+                    alert("Vendor ID atau RFQ ID tidak valid!");
+                    console.error("Invalid Vendor ID or RFQ ID. Vendor ID:", vendorId, "RFQ ID:", rfqId);
+                    return;
+                }
+
+                // URL API untuk mengirim email
+                const emailApiUrl = `http://localhost:3000/app/api/v1/rfq/email/${vendorId}?rfq_id=${rfqId}`;
+                console.log("Constructed Email API URL:", emailApiUrl);
+
+                // Memanggil API kirim email
                 $.ajax({
-                    url: 'http://localhost:3000/app/api/v1/rfq/status',
-                    method: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        id_rfq: RfqId
-                    }),
+                    url: emailApiUrl,
+                    type: 'GET',
                     success: function(response) {
-                        if (response.meta.code === 200) {
-                            alert("Bill berhasil dikonfirmasi!");
-
-                            // Update status tombol
-                            $('#doneButton').prop('disabled', false).addClass('highlighted');
-                            $('#draftButton').prop('disabled', true).removeClass('highlighted');
-
-                            // Update UI
-                            $('#statusMessage').text('Bill sudah dikonfirmasi!');
-
-                            // Panggil API untuk setiap material
-                            materials.forEach((material) => {
-                                $.ajax({
-                                    url: 'http://localhost:3000/app/api/v1/material/increasemat',
-                                    method: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify(material),
-                                    success: function(materialResponse) {
-                                        if (materialResponse.meta.code === 200) {
-                                            console.log(
-                                                `Material ${material.MaterialName} berhasil diperbarui.`,
-                                                materialResponse
-                                            );
-
-                                            $('#materialStatusMessage').append(
-                                                `<p>Material ${material.MaterialName} berhasil ditambahkan ${material.Qty}!</p>`
-                                            );
-                                        } else {
-                                            console.error(
-                                                `Gagal memperbarui material ${material.MaterialName}.`,
-                                                materialResponse
-                                            );
-                                        }
-                                    },
-                                    error: function(error) {
-                                        console.error(
-                                            `Error saat memperbarui material ${material.MaterialName}:`,
-                                            error
-                                        );
-                                        alert(`Gagal menambah material ${material.MaterialName}. Silakan coba lagi.`);
-                                    },
-                                });
-                            });
-                        }
+                        console.log("Email sent successfully. Response:", response);
+                        alert("Email berhasil dikirim!");
                     },
-                    error: function(error) {
-                        console.error("Gagal mengonfirmasi Bill:", error);
-                        alert("Gagal mengonfirmasi Bill. Silakan coba lagi.");
-                    },
+                    error: function(xhr, status, error) {
+                        console.error("Failed to send email. Status:", status, "Error:", error, "Response:", xhr.responseText);
+                        alert("Gagal mengirim email. Silakan coba lagi.");
+                    }
                 });
+            });
+            // Periksa apakah teks di #statusText adalah 'PAID'
+            if ($('#statusText').text() === 'PAID') {
+                console.log("Status: PAID. Menghilangkan tombol Confirm.");
+                $('#saveButton').hide(); // Sembunyikan tombol Confirm
             }
-        });
 
+            // Opsional: Jika teks #statusText dapat berubah, pantau dengan observer
+            const observer = new MutationObserver(function(mutationsList) {
+                mutationsList.forEach(function(mutation) {
+                    if (mutation.target.textContent === 'PAID') {
+                        console.log("Status berubah menjadi PAID. Menghilangkan tombol Confirm.");
+                        $('#saveButton').hide(); // Sembunyikan tombol Confirm
+                    }
+                });
+            });
 
-
-
-        // Event listener untuk tombol kirim email
-        $('#sendEmailButton').click(function() {
-        console.log("Send Email button clicked!");
-
-        // Ambil parameter RFQ ID dari URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const rfqId = urlParams.get('id');
-        console.log("Extracted RFQ ID:", rfqId);
-
-        // Ambil vendor ID dari dropdown
-        const vendorId = $('#vendorSelect').val();
-        console.log("Selected Vendor ID:", vendorId);
-
-        // Validasi input
-        if (!vendorId || !rfqId) {
-            alert("Vendor ID atau RFQ ID tidak valid!");
-            console.error("Invalid Vendor ID or RFQ ID. Vendor ID:", vendorId, "RFQ ID:", rfqId);
-            return;
-        }
-
-        // URL API untuk mengirim email
-        const emailApiUrl = `http://localhost:3000/app/api/v1/rfq/email/${vendorId}?rfq_id=${rfqId}`;
-        console.log("Constructed Email API URL:", emailApiUrl);
-
-        // Memanggil API kirim email
-        $.ajax({
-            url: emailApiUrl,
-            type: 'GET',
-            success: function(response) {
-                console.log("Email sent successfully. Response:", response);
-                alert("Email berhasil dikirim!");
-            },
-            error: function(xhr, status, error) {
-                console.error("Failed to send email. Status:", status, "Error:", error, "Response:", xhr.responseText);
-                alert("Gagal mengirim email. Silakan coba lagi.");
-            }
-        });
-        });
+            // Konfigurasi observer untuk memantau #statusText
+            observer.observe(document.getElementById('statusText'), {
+                childList: true, // Perubahan pada konten anak
+                subtree: true, // Termasuk elemen di dalamnya
+                characterData: true, // Perubahan teks
+            });
         });
     </script>
 
