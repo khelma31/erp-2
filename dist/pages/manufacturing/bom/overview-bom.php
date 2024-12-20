@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Material</title>
+    <title>Overview BoM - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -58,12 +58,11 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 style="text-align: right;">Product Reference</h4>
                                     <div class="col-12 d-flex justify-content-end mb-5">
-                                        <a type="button" class="btn btn-outline-secondary btn-sm" id="printButtonPdf">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="printButtonPdf">
                                             <i class="bi bi-file-earmark bi-middle me-1"></i>
                                             Export as PDF
-                                        </a>
+                                        </button>
                                     </div>
                                     <h4 style="text-align: left;">Product Reference</h4>
                                 </div>
@@ -109,6 +108,47 @@
     <script src="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="../../../assets/js/bootstrap.bundle.min.js"></script>
     <script src="../../../assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.js"></script>
+    <script src="https://unpkg.com/html2pdf.js@0.9.3/dist/html2pdf.bundle.js"></script>
+    <style>
+        /* Styling untuk memastikan PDF memiliki tampilan yang konsisten */
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #table1 th,
+        #table1 td {
+            text-align: left;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border: none;
+        }
+
+        th,
+        td {
+            padding: 8px;
+        }
+
+        #table1 th:nth-child(1),
+        #table1 td:nth-child(1) {
+            width: 40%;
+        }
+
+        #table1 th:nth-child(n+2),
+        #table1 td:nth-child(n+2) {
+            text-align: right;
+            width: 20%;
+        }
+
+        .indent td:first-child {
+            padding-left: 50px;
+        }
+    </style>
+
 
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -165,7 +205,6 @@
 
         // Fetch BOM overview on page load
         document.addEventListener('DOMContentLoaded', fetchBomOverview);
-
         document.getElementById('printButtonPdf').addEventListener('click', function() {
             if (!bomId) {
                 alert('Bom ID is not defined.');
@@ -238,7 +277,62 @@
             padding-left: 50px;
             /* Indentasi lebih dalam */
         }
+
+        /* Styling tombol Export as PDF */
+        #printButtonPdf {
+            font-size: 14px;
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #6c757d;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        #printButtonPdf:hover {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        #printButtonPdf i {
+            margin-right: 8px;
+        }
+
+        /* Styling untuk elemen body yang lebih rapi */
+        body {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* Styling untuk halaman PDF */
+        @media print {
+            body {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            /* Mengatur layout tabel saat dicetak */
+            #table1 {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            #table1 th,
+            #table1 td {
+                padding: 6px;
+                border: 1px solid #ccc;
+            }
+
+            /* Menyesuaikan ukuran dan posisi header dan footer */
+            header,
+            footer {
+                display: none;
+            }
+        }
     </style>
+
 </body>
 
 </html>

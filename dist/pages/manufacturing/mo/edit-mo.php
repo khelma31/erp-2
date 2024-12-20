@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Material</title>
+    <title>Edit Manufacturing Order - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -71,7 +71,7 @@
                                             </div>
                                             <div class="col d-flex justify-content-end" style="padding: 30px; padding-right: 16px;">
                                                 <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                                    <a type="button" id="printButtonPDF" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
                                                     </a>
@@ -189,6 +189,8 @@
 
     <!-- Import jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
 
     <script>
         $(document).ready(function() {
@@ -227,7 +229,8 @@
                             } else if (data.status === 'done') {
                                 $('#doneButton').addClass('highlighted').removeClass('disabled');
                             }
-
+                            // Pastikan id_bom sudah terisi dengan benar
+                            const bomId = data.id_bom; // Periksa bahwa ini benar-benar ada
                             // Fetch material quantities and BOM overview
                             fetchMaterialQuantities(() => {
                                 fetchBOMOverview(data.id_bom, data.qtytoproduce);
@@ -268,33 +271,57 @@
 
             // Fetch BOM overview
             function fetchBOMOverview(bomId, qtyToProduce) {
+                console.log("BOM ID:", bomId); // Pastikan bomId sudah diteruskan dengan benar
+
                 $.ajax({
                     url: `http://localhost:3000/app/api/v1/bom/${bomId}/overview`,
                     method: 'GET',
                     success: function(response) {
+                        console.log("API Response:", response); // Periksa keseluruhan respons API
+
+                        // Pastikan response.data.materials ada dan valid
+                        if (!response.data || !response.data.materials || response.data.materials.length === 0) {
+                            console.error("No materials found in BOM overview");
+                            return; // Keluar dari fungsi jika tidak ada material
+                        }
+
                         const materials = response.data.materials;
                         const materialTableBody = $('#materialTabelBody');
-                        materialTableBody.empty();
-                        bomOverview = materials; // Store BOM overview for future use
+                        materialTableBody.empty(); // Hapus data lama
 
+                        bomOverview = materials; // Menyimpan overview BOM untuk penggunaan selanjutnya
+                        console.log("Materials:", materials); // Cek apakah materials sudah ada
+
+                        // Looping untuk setiap material dan buat baris tabel
                         materials.forEach(function(material) {
-                            const availableQty = materialQuantities[material.material] || 0;
+                            console.log("Processing material:", material); // Pastikan material memiliki data yang benar
+
+                            const availableQty = materialQuantities[material.material].toFixed(2) || 0;
                             const reservedQty = parseFloat(material.quantity) || 0;
                             const consumedQty = (reservedQty * qtyToProduce).toFixed(2);
 
+                            console.log("Available Qty:", availableQty); // Cek jumlah material tersedia
+                            console.log("Reserved Qty:", reservedQty); // Cek jumlah reserved
+                            console.log("Consumed Qty:", consumedQty); // Cek jumlah yang dikonsumsi
+
+                            // Buat row untuk setiap material
                             const row = `
-                <tr>
-                    <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly data-name="${material.material}"></td>
-                    <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
-                    <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
-                    <td><input type="number" name="consumed[]" class="form-control consumed" value="${consumedQty}" readonly></td>
-                </tr>`;
+                    <tr>
+                        <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly data-name="${material.material}"></td>
+                        <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
+                        <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
+                        <td><input type="number" name="consumed[]" class="form-control consumed" value="${consumedQty}" readonly></td>
+                    </tr>`;
                             materialTableBody.append(row);
                         });
 
-                        checkMaterialAvailability();
+                        console.log("Table updated successfully");
+
+                        checkMaterialAvailability(); // Panggil fungsi untuk memeriksa ketersediaan material
+
                     },
                     error: function(error) {
+                        console.error("Error fetching BOM overview:", error); // Log error jika gagal
                         Toastify({
                             text: "Failed to load BOM overview",
                             duration: 3000,
@@ -304,6 +331,7 @@
                     }
                 });
             }
+
 
             // Event listener for save button
             $('#saveButton').click(function() {
@@ -348,20 +376,6 @@
                     // Memanggil fungsi checkAvailability setelah tombol Check Availability diklik
                     checkMaterialAvailability();
 
-                    // function checkMaterialAvailability() {
-                    //     let allMaterialsAvailable = true; // Pastikan ini diset ulang
-                    //     $('#materialTabelBody tr').each(function() {
-                    //         const reserved = parseFloat($(this).find('input[name="reserved[]"]').val());
-                    //         const consumed = parseFloat($(this).find('input[name="consumed[]"]').val());
-
-                    //         if (reserved < consumed) {
-                    //             $(this).find('input[name="consumed[]"]').addClass('bg-danger').removeClass('bg-success');
-                    //             allMaterialsAvailable = false;
-                    //         } else {
-                    //             $(this).find('input[name="consumed[]"]').addClass('bg-success').removeClass('bg-danger');
-                    //         }
-                    //     });
-                    // }
 
                     function checkMaterialAvailability() {
                         let allMaterialsAvailable = true; // Ensure this is reset
@@ -606,6 +620,33 @@
                         }
                     });
                 }
+            });
+
+            $('#printButtonPDF').click(function() {
+                // Ensure materialId is defined
+                if (!moId) {
+                    alert('MO ID is not defined.');
+                    return;
+                }
+
+                axios({
+                        url: `http://localhost:3000/app/api/v1/mo/${moId}/pdf`, // Use backticks
+                        method: 'GET',
+                        responseType: 'blob' // Important
+                    })
+                    .then((response) => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `data_${moId}.pdf`); // Use backticks for filename
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                    })
+                    .catch((error) => {
+                        console.error('There was an error downloading the PDF!', error);
+                        alert('Error downloading PDF.');
+                    });
             });
         });
     </script>

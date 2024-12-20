@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Manufacturing Order</title>
+    <title>Purchase Order - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -73,7 +73,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="buttons">
-                                                    <a id="exportPdfButton" class="btn btn-outline-secondary btn-sm">
+                                                    <a id="printButtonPDF" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
                                                     </a>
@@ -136,110 +136,6 @@
                                             </div>
                                         </div>
                                     </form>
-
-                                    <!-- <form class="form">
-                                        <div class="row p-3">
-                                            <div class="page-title">
-                                                <div class="row">
-                                                    <div class="col-12 col-md-6 order-md-1 order-last mb-3">
-                                                        <h5>Input Material</h5>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <div class="row">
-                                                    <div class="col-md-12 col-12 d-flex justify-content-end">
-                                                        <button type="button" class="btn btn-outline-primary btn-sm" id="addMaterialButton">
-                                                            <i class="bi bi-plus-square bi-middle me-2"></i>Add Material</button>
-                                                    </div>
-                                                </div>
-                                                <table class="table mt-3" id="materialTable">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>Product</th>
-                                                            <th>Quantity</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Tax</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="materialTabelBody">
-                                                        <tr>
-                                                            <td>
-                                                                <select class="form-select" name="product[]" required>
-                                                                    <option value="" disabled selected>- Select Product -</option>
-                                                                    <option value="Steel">Option 1</option>
-                                                                </select>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="quantity[]" class="form-control" placeholder="0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="unitPrice[]" class="form-control" placeholder="Rp. 0" required>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="tax[]" class="form-control" placeholder="10%" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <input type="number" name="subtotal[]" class="form-control" placeholder="Rp. 0" disabled>
-                                                            </td>
-                                                            <td>
-                                                                <button type="button" class="btn btn-danger btn-sm deleteMaterialButton">
-                                                                    <i class="bi bi-trash bi-middle"></i>
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                                <div id="materialForm" style="display: none;">
-                                                    <div class="row">
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialProduct">Product</label>
-                                                                <input type="text" class="form-control" id="materialProduct">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialQuantity">Quantity</label>
-                                                                <input type="text" class="form-control" id="materialQuantity">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialUnit">Unit Price</label>
-                                                                <input type="text" class="form-control" id="materialPrice">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialTax">Tax</label>
-                                                                <input type="number" class="form-control" id="materialTax">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-sm-4">
-                                                            <div class="form-group">
-                                                                <label for="materialSubtotal">Subtotal</label>
-                                                                <input type="number" class="form-control" id="materialSubtotal">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <button type="button" class="btn btn-primary" id="submitBahanButton">Tambahkan Bahan</button>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-12 d-flex justify-content-end mt-5">
-                                                <button type="button"
-                                                    class="btn btn-primary me-2 mb-1" id="saveButton" data-status="RFQ">Confirm Order</button>
-                                                <a type="reset"
-                                                    class="btn btn-light-secondary mb-1" href="list-rfq.php">Cancel</a>
-                                            </div>
-
-                                        </div>
-                                    </form> -->
-
                                 </div>
                             </div>
                         </div>
@@ -406,40 +302,104 @@
 
             $('#saveButton').click(function() {
                 const RfqId = new URLSearchParams(window.location.search).get('id'); // Ambil RFQ ID dari URL
+                const products = [];
 
-                // Tampilkan dialog konfirmasi
-                if (confirm("Apakah Anda yakin ingin mengonfirmasi RFQ ini?")) {
-                    // Jika pengguna memilih "OK", jalankan AJAX
-                    $.ajax({
-                        url: 'http://localhost:3000/app/api/v1/rfq/status',
-                        method: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            id_rfq: RfqId
-                        }),
-                        success: function(response) {
-                            if (response.meta.code === 200) {
-                                alert("RFQ berhasil dikonfirmasi!");
-                                $('#poButton').prop('disabled', false).addClass('highlighted');
-                                $('#rfqButton').prop('disabled', true).removeClass('highlighted');
-                                // Ubah teks tombol #saveButton
-                                $('#saveButton').text('To Validate');
+                // Ambil data produk dari tabel
+                $('#materialTabelBody tr').each(function() {
+                    const product = {
+                        id_product: $(this).find('select[name="product[]"]').val(),
+                        productname: $(this).find('select[name="product[]"] option:selected').text(),
+                        quantity: $(this).find('input[name="quantity[]"]').val(),
+                        unitprice: $(this).find('input[name="unitPrice[]"]').val(),
+                        tax: "11%", // Anda dapat sesuaikan jika diperlukan
+                        Subtotal: $(this).find('input[name="subtotal[]"]').val(),
+                    };
+                    products.push(product);
+                });
 
-                                // Tambahkan event listener untuk pindah ke halaman validate.php saat tombol ditekan
-                                $('#saveButton').off('click').on('click', function() {
-                                    window.location.href = 'list-po.php';
-                                });
+                const payload = {
+                    id_rfq: RfqId,
+                    id_vendor: $('#vendorSelect').val(),
+                    order_date: $('#order-date-column').val(),
+                    products: products
+                };
 
-                            }
-                        },
-                        error: function(error) {
-                            alert("Gagal mengonfirmasi RFQ. Silakan coba lagi.");
-                            console.error("Error:", error);
-                        }
-                    });
-                }
+                // Request untuk update RFQ
+                $.ajax({
+                    url: 'http://localhost:3000/app/api/v1/rfq',
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(payload),
+                    success: function(response) {
+                        alert("RFQ berhasil dikonfirmasi!");
+
+                        // Ubah status RFQ setelah update RFQ berhasil
+                        updateRfqStatus(RfqId);
+
+                        // Tombol PO dan RFQ status
+                        $('#poButton').prop('disabled', false).addClass('highlighted');
+                        $('#rfqButton').prop('disabled', true).removeClass('highlighted');
+                        // Ubah teks tombol #saveButton
+                        $('#saveButton').text('To Validate');
+
+                        // Tambahkan event listener untuk pindah ke halaman validate.php saat tombol ditekan
+                        $('#saveButton').off('click').on('click', function() {
+                            window.location.href = 'list-po.php';
+                        });
+                    },
+                    error: function(error) {
+                        alert("Gagal memperbarui RFQ. Silakan coba lagi.");
+                        console.error("Error:", error);
+                    }
+                });
             });
 
+            // Fungsi untuk update status RFQ
+            function updateRfqStatus(RfqId) {
+                const statusPayload = {
+                    id_rfq: RfqId
+                };
+
+                $.ajax({
+                    url: 'http://localhost:3000/app/api/v1/rfq/status',
+                    method: 'POST', // Atau POST jika API menggunakan POST
+                    contentType: 'application/json',
+                    data: JSON.stringify(statusPayload),
+                    success: function(response) {
+                        console.log("Status RFQ berhasil diperbarui:", response);
+                    },
+                    error: function(error) {
+                        alert("Gagal memperbarui status RFQ. Silakan coba lagi.");
+                        console.error("Error:", error);
+                    }
+                });
+            }
+            $('#printButtonPDF').click(function() {
+                // Ensure materialId is defined
+                if (!RfqId) {
+                    alert('RFQ ID is not defined.');
+                    return;
+                }
+
+                axios({
+                        url: `http://localhost:3000/app/api/v1/rfq/${RfqId}/pdf`, // Use backticks
+                        method: 'GET',
+                        responseType: 'blob' // Important
+                    })
+                    .then((response) => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `data_${RfqId}.pdf`); // Use backticks for filename
+                        document.body.appendChild(link);
+                        link.click();
+                        link.remove();
+                    })
+                    .catch((error) => {
+                        console.error('There was an error downloading the PDF!', error);
+                        alert('Error downloading PDF.');
+                    });
+            });
 
             // Event listener untuk tombol kirim email
             $('#sendEmailButton').click(function() {

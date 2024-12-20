@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>Add Manufacturing Order - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -61,14 +61,6 @@
                                                     <button type="button" class="btn disabled btn-primary">Check Availability</button>
                                                     <button type="button" class="btn disabled btn-primary">Produce</button>
                                                     <button type="button" class="btn disabled btn-primary">Mark As Done</button>
-                                                </div>
-                                            </div>
-                                            <div class="col d-flex justify-content-end" style="padding: 30px; padding-right: 16px;">
-                                                <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
-                                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
-                                                        Export as PDF
-                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -251,17 +243,22 @@
 
                                 materials.forEach(function(material) {
                                     // Get the available quantity based on material name
-                                    const availableQty = materialQuantities[material.material] || 0;
-                                    const reservedQty = parseFloat(material.quantity) || 0;
+                                    const availableQty = parseFloat(materialQuantities[material.material] || 0).toFixed(3);
+                                    const reservedQty = parseFloat(material.quantity || 0).toFixed(3);
+                                    const quantityToProduce = parseFloat($('#quantityToProduce').val() || 0);
+
+                                    // Calculate consumed quantity
+                                    const consumedQty = (parseFloat(reservedQty) * quantityToProduce).toFixed(2);
 
                                     // Add a row to the table with the material data
                                     const row = `
-                                <tr>
-                                    <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly></td>
-                                    <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
-                                    <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
-                                    <td><input type="number" name="consumed[]" class="form-control consumed" value="${(reservedQty * parseFloat($('#quantityToProduce').val()) || 0).toFixed(2)}" readonly></td>
-                                </tr>`;
+        <tr>
+            <td><input type="text" name="material[]" class="form-control" value="${material.material}" readonly></td>
+            <td><input type="number" name="toProduce[]" class="form-control to-produce" value="${reservedQty}" readonly></td>
+            <td><input type="number" name="reserved[]" class="form-control" value="${availableQty}" readonly></td>
+            <td><input type="number" name="consumed[]" class="form-control consumed" value="${consumedQty}" readonly></td>
+        </tr>`;
+
                                     materialTableBody.append(row);
                                 });
                             },

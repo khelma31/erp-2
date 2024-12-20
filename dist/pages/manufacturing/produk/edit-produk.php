@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Material</title>
+    <title>Edit Product - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -137,7 +137,7 @@
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="image" class="mb-2"> Image</label>
-                                                        <img id="imagePreview" style="display:none; width: 300px; " alt="Product Image">
+                                                        <img id="imagePreview" style="display:none; width: 150px; " alt="Product Image">
                                                     </div>
                                                 </div>
 

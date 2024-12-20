@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>List Material - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 
     <!-- Axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -106,7 +106,7 @@
                             <td>${product.Materialname}</td>
                             <td>${product.Materialcategory}</td>
                             <td>${product.Sellprice}</td>
-                            <td>${product.Qty}</td>
+                            <td>${parseFloat(product.Qty).toFixed(3)}</td>
                             <td>
                                 <a type="button" class="btn btn-outline-success btn-sm me-1" href='edit-bahan.php?id=${product.id_material}'>
                                     <i class="bi bi-pencil-square bi-middle"></i>

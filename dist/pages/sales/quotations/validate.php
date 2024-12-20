@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add RFQ</title>
+    <title>Validate - Konate Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../../assets/css/bootstrap.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -53,7 +54,6 @@
                                             <div class="col d-flex" style="padding: 30px; padding-right: 16px;">
                                                 <div class="btn-group" role="group" aria-label="Basic example">
                                                     <button type="button" id="invoiceButton" class="btn btn-primary" disabled>Invoiced</button>
-                                                    <button type="button" id="deliveryButtonn" class="btn btn-primary" disabled>Delivery</button>
                                                     <button type="button" id="doneButton" class="btn btn-primary" disabled>Done</button>
                                                 </div>
                                             </div>
@@ -65,24 +65,15 @@
                                                     </a>
                                                 </div>
                                                 <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-danger btn-sm">
+                                                    <a type="button" id="sendEmailButton" class="btn btn-outline-danger btn-sm">
                                                         <i class="bi bi-mailbox bi-middle me-1"></i>
                                                         Send by Email
                                                     </a>
                                                 </div>
                                                 <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                                    <a type="button" id="btnExport" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col d-flex" style="padding-left: 30px;">
-                                                <div class="buttons">
-                                                    <a type="button" class="btn btn-outline-primary btn-sm">
-                                                        Create Invoice
                                                     </a>
                                                 </div>
                                             </div>
@@ -193,8 +184,8 @@
                                             </div>
 
                                             <div class="col-12 d-flex justify-content-end mt-5">
-                                                <button type="submit" id="saveButton" class="btn btn-primary me-2 mb-1">Confirm</button>
-                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/manufacturing/bom/list-bom.php">Cancel</a>
+                                                <button type="submit" id="saveButton" class="btn btn-primary me-2 mb-1">Confirm Invoice</button>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" href="/../../../../erp-2/dist/pages/sales/quotations/list-sales-order.php">Cancel</a>
                                             </div>
                                         </div>
                                     </form>
@@ -276,8 +267,7 @@
                             $('#deliveryButtonn').removeAttr('disabled');
                             $('#invoiceButton').attr('disabled', 'disabled');
                             $('#doneButton').attr('disabled', 'disabled');
-                            $('#saveButton').text('To Deliver');
-                            // Tambahkan event listener untuk pindah ke halaman validate.php saat tombol ditekan
+                            $('#saveButton').text('Done');
                             $('#saveButton').off('click').on('click', function() {
                                 window.location.replace('list-sales-order.php');
                             });
@@ -286,7 +276,7 @@
                             $('#doneButton').removeAttr('disabled');
                             $('#qtnButton').attr('disabled', 'disabled');
                             $('#salesButton').attr('disabled', 'disabled');
-                            $('#saveButton').text('To Deliver');
+                            $('#saveButton').attr('disabled', 'disabled')
                             // Tambahkan event listener untuk pindah ke halaman validate.php saat tombol ditekan
                             $('#saveButton').off('click').on('click', function() {
                                 window.location.replace('list-sales-order.php');
@@ -384,7 +374,16 @@
                 calculateTotal();
             });
 
-            $('#saveButton').click(function() {
+
+            document.getElementById('btnExport').addEventListener('click', function() {
+                if (RfqId) {
+                    window.open(`http://localhost:3000/app/api/v1/quotation/${RfqId}/pdf`, '_blank');
+                } else {
+                    alert('Quo ID is missing!');
+                }
+            });
+
+            $('#saveButton').off('click').on('click', function() {
                 const RfqId = new URLSearchParams(window.location.search).get('id'); // Get RFQ ID from URL
 
                 // Show confirmation dialog
@@ -425,9 +424,6 @@
                 }
             });
 
-
-
-
             // Event listener untuk tombol kirim email
             $('#sendEmailButton').click(function() {
                 console.log("Send Email button clicked!");
@@ -449,7 +445,7 @@
                 }
 
                 // URL API untuk mengirim email
-                const emailApiUrl = `http://localhost:3000/app/api/v1/rfq/email/${vendorId}?rfq_id=${rfqId}`;
+                const emailApiUrl = `http://localhost:3000/app/api/v1/quotation/email/${vendorId}?quotation_id=${rfqId}`;
                 console.log("Constructed Email API URL:", emailApiUrl);
 
                 // Memanggil API kirim email

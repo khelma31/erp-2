@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>List Quotation - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -56,10 +56,6 @@
                                         <i class="bi bi-plus-square bi-middle me-1"></i>
                                         Add
                                     </a>
-                                    <a type="button" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
-                                        Export as PDF
-                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +64,7 @@
                                 <thead>
                                     <tr>
                                         <th>Reference</th>
-                                        <th>Costumer</th>
+                                        <th>Customer</th>
                                         <th>Order Date</th>
                                         <th>Status</th>
                                         <th>Action</th>
@@ -91,22 +87,55 @@
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        // Fetch vendor data from API and populate the table
-        axios.get('http://localhost:3000/app/api/v1/quotation/all/quo')
+        // Ambil data costumer dari API untuk memetakan id_costumer ke nama
+        let costumers = {};
+
+        axios.get('http://localhost:3000/app/api/v1/costumers')
             .then(response => {
-                const vendors = response.data.data;
-                const tableBody = document.getElementById('vendorTableBody');
+                const costumerData = response.data.data;
 
-                vendors.forEach(vendor => {
+                // Simpan data costumer dalam objek untuk akses cepat
+                costumerData.forEach(costumer => {
+                    costumers[costumer.id_costumer] = costumer.costumername;
+                });
 
-                    // Format the date to a more user-friendly format
-                    const formattedDate = new Date(vendor.order_date).toLocaleDateString();
-                    const row = `
+                // Setelah mengambil data costumer, fetch data quotation
+                fetchQuotations();
+            })
+            .catch(error => {
+                console.error('There was an error fetching the customers!', error);
+            });
+
+        // Fungsi untuk mengambil data dari API dan mengisi tabel
+        function fetchQuotations() {
+            axios.get('http://localhost:3000/app/api/v1/quotation/all/quo')
+                .then(response => {
+                    const vendors = response.data.data;
+                    const tableBody = document.getElementById('vendorTableBody');
+
+                    vendors.forEach(vendor => {
+                        // Format tanggal
+                        const formattedDate = new Date(vendor.order_date).toLocaleDateString();
+
+                        // Tentukan badge berdasarkan status
+                        let statusBadge = '';
+                        if (vendor.status === 'QUOTATION') {
+                            statusBadge = '<span class="badge bg-secondary">Quotation</span>';
+                        } else if (vendor.status === 'Sales Order') {
+                            statusBadge = '<span class="badge bg-success">Sales Order</span>';
+                        } else {
+                            statusBadge = '<span class="badge bg-secondary">Unknown</span>'; // Untuk status yang tidak diketahui
+                        }
+
+                        // Ambil nama costumer berdasarkan id_costumer
+                        const customerName = costumers[vendor.id_costumer] || 'Unknown Customer'; // Default 'Unknown Customer' jika tidak ditemukan
+
+                        const row = `
                     <tr>
                         <td>${vendor.id_quotation}</td>
-                        <td>${vendor.id_costumer}</td>
+                        <td>${vendor.id_costumer} - ${customerName}</td> <!-- Menampilkan ID dan nama costumer -->
                         <td>${formattedDate}</td>
-                        <td>${vendor.status}</td>
+                        <td>${statusBadge}</td>
                         <td>
                             <a type="button" class="btn btn-outline-success btn-sm me-1" href='sales-order.php?id=${vendor.id_quotation}'>
                                 <i class="bi bi-pencil-square bi-middle"></i>
@@ -117,18 +146,19 @@
                         </td>
                     </tr>
                     `;
-                    tableBody.innerHTML += row;
+                        tableBody.innerHTML += row;
+                    });
+
+                    // Initialize the DataTable after the table has been populated
+                    let table1 = document.querySelector('#table1');
+                    let dataTable = new simpleDatatables.DataTable(table1);
+                })
+                .catch(error => {
+                    console.error('There was an error fetching the vendors!', error);
                 });
+        }
 
-                // Initialize the DataTable after the table has been populated
-                let table1 = document.querySelector('#table1');
-                let dataTable = new simpleDatatables.DataTable(table1);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the vendors!', error);
-            });
-
-        // Function to delete a vendor
+        // Fungsi untuk menghapus vendor
         function deleteVendor(id) {
             if (confirm(`Are you sure you want to delete Quotation with ID ${id}?`)) {
                 axios.delete(`http://localhost:3000/app/api/v1/quotation/${id}`)
@@ -144,6 +174,7 @@
             }
         }
     </script>
+
 
     <script src="../../../assets/js/main.js"></script>
 </body>

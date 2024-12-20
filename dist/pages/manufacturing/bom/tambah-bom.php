@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>Add BoM - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -77,41 +77,12 @@
                                                             required>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-6 col-12 mb-3">
-                                                    <div class="form-group">
-                                                        <label for="variantSelect" class="mb-2">Product Variant</label>
-                                                        <fieldset class="form-group">
-                                                            <select class="form-select" id="variantSelect" required>
-                                                                <option value="" disabled selected>- Choose Variant -</option>
-                                                                <option>Minyak Esensial</option>
-                                                            </select>
-                                                        </fieldset>
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-md-6 col-12 mb-3">
+                                                <div class="col-md-12 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="quantity" class="mb-2">Quantity</label>
                                                         <div class="input-group mb-3">
-                                                            <input
-                                                                type="text"
-                                                                id="quantity"
-                                                                class="form-control"
-                                                                placeholder="Quantity"
-                                                                required>
-                                                            <button
-                                                                class="btn btn-primary dropdown-toggle"
-                                                                type="button"
-                                                                data-bs-toggle="dropdown"
-                                                                aria-expanded="false">Unit</button>
-                                                            <ul class="dropdown-menu">
-                                                                <li>
-                                                                    <a class="dropdown-item" href="#">g</a>
-                                                                </li>
-                                                                <li>
-                                                                    <a class="dropdown-item" href="#">ml</a>
-                                                                </li>
-                                                            </ul>
+                                                            <input type="number" class="form-control" id="quantity" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" step="1">
+                                                            <span class="input-group-text" id="inputGroup-sizing-default">Unit</span>
                                                         </div>
                                                     </div>
                                                 </div>

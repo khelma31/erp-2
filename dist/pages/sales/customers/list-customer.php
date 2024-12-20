@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>List Customer - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -56,7 +56,7 @@
                                         <i class="bi bi-plus-square bi-middle me-1"></i>
                                         Add
                                     </a>
-                                    <a type="button" class="btn btn-outline-secondary btn-sm">
+                                    <a type="button" id="btnExport" class="btn btn-outline-secondary btn-sm">
                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                         Export as PDF
                                     </a>
@@ -92,6 +92,12 @@
     <script src="../../../assets/vendors/simple-datatables/simple-datatables.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        document.getElementById('btnExport').addEventListener('click', function() {
+            btnExport.addEventListener('click', function() {
+                window.open(`http://localhost:3000/app/api/v1/costumers/pdf`, '_blank');
+            });
+
+        });
         // Fetch vendor data from API and populate the table
         axios.get('http://localhost:3000/app/api/v1/costumers')
             .then(response => {
@@ -126,6 +132,8 @@
             .catch(error => {
                 console.error('There was an error fetching the Costumer!', error);
             });
+
+
 
         // Function to delete a vendor
         function deleteVendor(id) {

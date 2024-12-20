@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Manufacturing Order</title>
+    <title>Validate - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -75,7 +75,7 @@
                                                     </a>
                                                 </div>
                                                 <div class="buttons">
-                                                    <a id="exportPdfButton" class="btn btn-outline-secondary btn-sm">
+                                                    <a id="printButtonPDF" class="btn btn-outline-secondary btn-sm">
                                                         <i class="bi bi-file-earmark bi-middle me-1"></i>
                                                         Export as PDF
                                                     </a>
@@ -392,45 +392,67 @@
                 });
             });
 
-
-            // Event listener untuk tombol kirim email
             $('#sendEmailButton').click(function() {
-                console.log("Send Email button clicked!");
-
-                // Ambil parameter RFQ ID dari URL
                 const urlParams = new URLSearchParams(window.location.search);
-                const rfqId = urlParams.get('id');
-                console.log("Extracted RFQ ID:", rfqId);
+                const rfqId = urlParams.get('id'); // Ambil RFQ ID dari URL
+                const vendorId = $('#vendorSelect').val(); // Ambil vendor ID dari dropdown
 
-                // Ambil vendor ID dari dropdown
-                const vendorId = $('#vendorSelect').val();
-                console.log("Selected Vendor ID:", vendorId);
-
-                // Validasi input
-                if (!vendorId || !rfqId) {
-                    alert("Vendor ID atau RFQ ID tidak valid!");
-                    console.error("Invalid Vendor ID or RFQ ID. Vendor ID:", vendorId, "RFQ ID:", rfqId);
+                if (!rfqId || !vendorId) {
+                    alert("RFQ ID atau Vendor ID tidak valid!");
+                    console.error("RFQ ID atau Vendor ID tidak ditemukan:", {
+                        rfqId,
+                        vendorId
+                    });
                     return;
                 }
 
                 // URL API untuk mengirim email
                 const emailApiUrl = `http://localhost:3000/app/api/v1/rfq/email/${vendorId}?rfq_id=${rfqId}`;
-                console.log("Constructed Email API URL:", emailApiUrl);
 
-                // Memanggil API kirim email
                 $.ajax({
                     url: emailApiUrl,
                     type: 'GET',
                     success: function(response) {
-                        console.log("Email sent successfully. Response:", response);
+                        console.log("Email berhasil dikirim:", response);
                         alert("Email berhasil dikirim!");
                     },
                     error: function(xhr, status, error) {
-                        console.error("Failed to send email. Status:", status, "Error:", error, "Response:", xhr.responseText);
+                        console.error("Gagal mengirim email:", error, xhr.responseText);
                         alert("Gagal mengirim email. Silakan coba lagi.");
                     }
                 });
             });
+
+
+            $('#printButtonPDF').click(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const rfqId = urlParams.get('id'); // Ambil RFQ ID dari URL
+
+                if (!rfqId) {
+                    alert('RFQ ID tidak valid!');
+                    return;
+                }
+
+                axios({
+                        url: `http://localhost:3000/app/api/v1/rfq/${rfqId}/pdf`,
+                        method: 'GET',
+                        responseType: 'blob', // Mengunduh file sebagai blob
+                    })
+                    .then(response => {
+                        const url = window.URL.createObjectURL(new Blob([response.data]));
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.setAttribute('download', `RFQ_${rfqId}.pdf`); // Nama file hasil unduhan
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                    .catch(error => {
+                        console.error('Error saat mengunduh PDF:', error);
+                        alert('Gagal mengunduh PDF. Silakan coba lagi.');
+                    });
+            });
+
         });
     </script>
 

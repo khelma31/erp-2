@@ -3,7 +3,9 @@
         <div class="sidebar-header">
             <div class="d-flex justify-content-between">
                 <div class="logo">
-                    <a href="/../../../erp-2/dist/pages/index.php"><img src="/../../../erp-2/dist/assets/images/logo/logo.png" alt="Logo" srcset=""></a>
+                    <a href="/../../../erp-2/dist/pages/index.php">
+                        <img src="/../../../erp-2/dist/assets/images/logo/1.png" alt="Logo" style="width: 125px; height: auto;">
+                    </a>
                 </div>
                 <div class="toggler">
                     <a href="/../../../erp-2/dist/pages/index.php" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
@@ -79,7 +81,7 @@
                 </li>
 
                 <li class="sidebar-item">
-                    <a href="../pages/auth-login.php" class='sidebar-link'>
+                    <a href="http://localhost:8080/erp-2/dist/pages/auth-login.php" class='sidebar-link'>
                         <i class="bi bi-person"></i>
                         <span>Log Out</span>
                     </a>

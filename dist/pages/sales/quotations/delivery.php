@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataTable - Mazer Admin Dashboard</title>
+    <title>Delivery - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -126,7 +126,7 @@
 
                                             <div class="col-12 d-flex justify-content-end mt-4">
                                                 <button type="button" class="btn btn-primary me-2 mb-1" id="saveButton" data-status="draft">Check Availability</button>
-                                                <a type="reset" class="btn btn-light-secondary mb-1" href="list-sakes-order.php">Back</a>
+                                                <a type="reset" class="btn btn-light-secondary mb-1" id="backButton" href="#">Back</a>
                                             </div>
                                         </div>
                                 </div>
@@ -171,6 +171,12 @@
             const RfqId = urlParams.get('id'); // Get RFQ ID from URL
             const apiUrl = `http://localhost:3000/app/api/v1/quotation/overview/${RfqId}`;
             let materialQuantities = {}; // Initialize an object to store material quantities
+            // Ambil ID dari parameter atau data lain
+            let quotationId = RfqId; // Misalnya, Anda dapat mengganti ini dengan ID dinamis
+
+            // Update href sesuai dengan ID yang diinginkan
+            document.getElementById('backButton').href = `http://localhost:8080/erp-2/dist/pages/sales/quotations/validate.php?id=${quotationId}`;
+
 
             function calculateTotal() {
                 let total = 0;
@@ -182,14 +188,14 @@
                 $('h6:contains("Total:")').text(`Total: Rp. ${total.toLocaleString('id-ID')}`);
             }
 
-            // Fetch material quantities
             function fetchMaterialQuantities(callback) {
                 $.ajax({
                     url: 'http://localhost:3000/app/api/v1/product/all',
                     method: 'GET',
                     success: function(response) {
+                        console.log("Fetched materials:", response); // Add this log to check the response data
                         response.data.forEach(function(material) {
-                            materialQuantities[material.Productname] = material.Qty || 0; // Store product quantities
+                            materialQuantities[material.id_product] = material.Qty || 0; // Store product quantities
                         });
                         callback(); // Call the callback after materials are fetched
                     },
@@ -203,6 +209,7 @@
                     }
                 });
             }
+
 
             // Load quotation data
             function loadQuotationData() {
@@ -221,9 +228,21 @@
 
                         console.log("Unknown status:", quotationData.status);
                         // Handle RFQ status and update button states
-                        if (quotationData.status === 'Delivery') {
+                        if (quotationData.status === 'Invoicer') {
                             $('#draftButton').removeAttr('disabled');
                             $('#doneButton').attr('disabled', 'disabled');
+                        } else if (quotationData.status === 'Delivery') {
+                            $('#doneButton').prop('disabled', false).removeClass('disabled');
+                            $('#draftButton').attr('disabled', 'disabled');
+                            $('#saveButton').remove();
+
+                            // Update the 'done' column with demand quantities
+                            $('#materialTabelBody tr').each(function() {
+                                const demandQty = $(this).find('input[name="quantity[]"]').val(); // Ambil nilai demand
+                                $(this).find('input[name="done[]"]').prop('disabled', false); // Aktifkan kolom 'done'
+                                $(this).find('input[name="done[]"]').val(demandQty); // Isi kolom 'done' dengan nilai demand
+                            });
+
                         } else if (quotationData.status === 'Done') {
                             $('#doneButton').prop('disabled', false).removeClass('disabled');
                             $('#draftButton').attr('disabled', 'disabled');
@@ -256,12 +275,13 @@
                             const availableQty = materialQuantities[product.product_name] || 0; // Get available quantity
                             const demandQty = product.quantity || 0; // Get demand quantity
                             const doneQty = quotationData.status === 'Done' ? demandQty : 0; // If status is 'Done', set 'done' to demandQty
-
+                            console.log(`Product: ${product.product_name}, Available Quantity: ${materialQuantities[product.product_name]}`);
+                            console.log(`Product: ${product.product_name}, Available Quantity: ${availableQty}`);
                             const newRow = `
         <tr>
             <td>
                 <select class="form-select" name="product[]" disabled>
-                    <option value="${product.product_id}" selected>${product.product_name}</option>
+                    <option value="${product.product_name}" selected>${product.product_name}</option>
                 </select>
             </td>
             <td><input type="number" name="quantity[]" class="form-control" value="${demandQty}" disabled></td>
@@ -394,7 +414,7 @@
                             $(this).text('Check'); // Ubah teks tombol menjadi 'Check'
                             $('#draftButton').prop('disabled', true); // Disable Draft button
                             $('#checkButton').prop('disabled', false).removeClass('disabled'); // Enable Check button
-                            alert("Status diubah menjadi Check. Klik lagi untuk Deliver.");
+                            alert("Ketersediaan produk mencukupi untuk memenuhi permintaan.");
 
                         } else if (clickCount === 2) {
                             // Klik kedua, ganti status tombol ke 'done' dan update status di database
@@ -414,7 +434,7 @@
                                 }),
                                 success: function(response) {
                                     if (response.meta.code === 200) {
-                                        alert("Status berhasil diperbarui ke Delivered.");
+                                        alert("Status berhasil diperbarui.");
 
                                         // Update UI setelah status diperbarui
                                         $('#doneButton').prop('disabled', false).removeClass('disabled');
@@ -441,38 +461,40 @@
                             });
                         }
 
-
-                        function decreaseProductStock() {
-                            $('#materialTabelBody tr').each(function() {
-                                const productId = $(this).find('select[name="product[]"]').val(); // Ambil ProductId
-                                const qty = parseFloat($(this).find('input[name="quantity[]"]').val()) || 0; // Ambil Qty
-
-                                // Kirim permintaan ke API untuk mengurangi stok
-                                $.ajax({
-                                    url: 'http://localhost:3000/app/api/v1/product/decrease',
-                                    method: 'POST',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({
-                                        ProductId: productId,
-                                        Qty: qty
-                                    }),
-                                    success: function(response) {
-                                        if (response.meta.code === 200) {
-                                            console.log(`Stok untuk ProductId ${productId} berhasil dikurangi sebesar ${qty}.`);
-                                        } else {
-                                            console.error(`Gagal mengurangi stok untuk ProductId ${productId}.`);
-                                        }
-                                    },
-                                    error: function(xhr, status, error) {
-                                        console.error(`Gagal mengurangi stok untuk ProductId ${productId}. Error:`, error);
-                                    }
-                                });
-                            });
-                        }
                     }
                 });
             });
 
+            function decreaseProductStock() {
+                $('#materialTabelBody tr').each(function() {
+                    const productId = $(this).find('select[name="product[]"]').val(); // Ambil ProductId
+                    console.log("Selected productId:", productId); // Debugging: Pastikan nilai produk diambil dengan benar
+
+                    const qty = parseFloat($(this).find('input[name="quantity[]"]').val()) || 0; // Ambil Qty dan pastikan menjadi angka desimal
+
+                    const data = {
+                        ProductId: productId, // Gantilah dengan ID produk yang benar
+                        Qty: qty // Gantilah dengan kuantitas yang benar
+                    };
+
+                    console.log("ProductId:", productId); // Periksa nilai productId
+                    console.log("Qty:", qty); // Periksa nilai qty
+
+                    console.log(data); // Periksa nilai qty
+                    $.ajax({
+                        url: 'http://localhost:3000/app/api/v1/product/decrease',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data), // Pastikan data dikirim sebagai string JSON
+                        success: function(response) {
+                            console.log("Stok berhasil dikurangi:", response);
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Gagal mengurangi stok:", error);
+                        }
+                    });
+                });
+            }
 
 
             // Event listener untuk tombol kirim email

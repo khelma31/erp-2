@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Vendor</title>
+    <title>Edit Vendor - Konate Dashboard</title>
 
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../../assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="../../../assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="../../../assets/css/app.css">
-    <link rel="shortcut icon" href="../../../assets/images/favicon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="../../../assets/images/logo/2.png" type="image/png">
 </head>
 
 <body>
@@ -57,6 +57,12 @@
                                     <div class="card-body">
                                         <form class="form" id="editVendorForm">
                                             <div class="row p-3">
+                                                <div class="col-12 d-flex justify-content-end mb-4">
+                                                    <a type="button" class="btn btn-outline-secondary btn-sm" id="btnPdf">
+                                                        <i class="bi bi-file-earmark bi-middle me-1"></i>
+                                                        Export as PDF
+                                                    </a>
+                                                </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
                                                         <label for="first-name-column" class="mb-2">Name</label>
@@ -65,11 +71,13 @@
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
                                                     <div class="form-group">
-                                                        <label for="vendor-type" class="mb-2">Is the vendor an individual or a company?</label>
-                                                        <input class="form-check-input me-1" type="radio" name="vendorType" id="individual" value="Individual">
-                                                        <label class="form-check-label me-2" for="individual">Individual</label>
-                                                        <input class="form-check-input me-1" type="radio" name="vendorType" id="company" value="Company">
-                                                        <label class="form-check-label" for="company">Company</label>
+                                                        <div class="col d-flex justify-content-start mb-3">
+                                                            <label for="">Individual or company?</label>
+                                                        </div>
+                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="individual" value="individual">
+                                                        <label class="form-check-label me-2" for="flexRadioDefault1">Individual</label>
+                                                        <input class="form-check-input me-1" type="radio" name="flexRadioDefault" id="company" value="company" checked>
+                                                        <label class="form-check-label" for="flexRadioDefault1">Company</label>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-6 col-12 mb-3">
@@ -182,6 +190,14 @@
                 .catch(error => {
                     console.error('There was an error updating the vendor!', error);
                 });
+        });
+
+        document.getElementById('btnPdf').addEventListener('click', function() {
+            if (vendorId) {
+                window.open(`http://localhost:3000/app/api/v1/vendor/${vendorId}/pdf`, '_blank');
+            } else {
+                alert('Vendor ID is missing!');
+            }
         });
     </script>
 </body>
